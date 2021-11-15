@@ -1,0 +1,20 @@
+{
+    "name": "vxize/lavx",
+    "description": "Laravel Tailwind",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Vxize\\Lavx\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {},
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Vxize\\Lavx\\Providers\\LavxServiceProvider"
+            ]
+        }
+    }
+}
