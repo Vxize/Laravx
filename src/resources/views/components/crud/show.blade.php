@@ -54,14 +54,14 @@
                 @click=" del = true"
             />
             <div x-cloak x-show="del" x-transition class="p-3 mx-auto max-w-md bg-white border border-gray-300 rounded-lg shadow-lg mt-2 text-center">
-                <x-lavx::h3 :text="__('lavx::confirm').__('lavx::delete').'？'" class="text-red-600 font-semibold" />
-                <x-lavx::h4 :text="__('lavx::data_cannot_recover')" class="text-red-600 font-semibold" />
+                <x-lavx::h3 :text="__('lavx::sys.confirm').__('lavx::sys.delete').'？'" class="text-red-600 font-semibold" />
+                <x-lavx::h4 :text="__('lavx::sys.data_cannot_recover')" class="text-red-600 font-semibold" />
                 <x-lavx::flex>
                     <div class="w-full md:w-1/2 p-2">
                         <x-lavx::form
                             action="{{ route($deleteRoute ?: $path.'.destroy', $record->{$routeKeyName}) }}"
                             type="delete"
-                            submitText="lavx::yes"
+                            submitText="lavx::sys.yes"
                             submitIcon="check"
                             submitColor="red"
                             showError="0"
@@ -72,7 +72,7 @@
                             icon="times"
                             color="green"
                             display="inline-block"
-                            :text="__('lavx::no')"
+                            :text="__('lavx::sys.no')"
                             link="#"
                             @click="del = false"
                         />

@@ -85,13 +85,11 @@ class PermissionController extends ResourceController
             ? '<ul><li>'.$roles.'</li></ul>'
             : __('lavx::sys.no_record');
         return view('lavx::alert', [
-            'title' => ['text' => __('lavx::user.permission').__('lavx::user.role')],
-            'subtitle' => ['text' => $permission->name],
-            'return_button' => ['link' => route('admin.permissions.index')],
-            'alert' => [
-                'text' => $alert_text,
-                'escaped' => $roles,
-            ]
+            'title' => __('lavx::user.permission').__('lavx::user.role'),
+            'subtitle' => $permission->name,
+            'return_link' => route('admin.permissions.index'),
+            'alert' => $alert_text,
+            'alert_escaped' => $roles,
         ]);
     }
 

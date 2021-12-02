@@ -15,6 +15,7 @@
     submitIcon="{{ $submit_icon ?? 'save' }}"
     submitWidth="{{ $submit_width ?? 'w-full' }}"
     submitDisabled="{{ $submit_disabled ?? false }}"
+    hasUpload="{{ $has_upload ?? false }}"
     :formData="$form_data ?? []"
 >
     {{ $slot ?? '' }}

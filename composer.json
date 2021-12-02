@@ -14,7 +14,11 @@
         "laravel": {
             "providers": [
                 "Vxize\\Lavx\\Providers\\LavxServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "Lavx": "Vxize\\Lavx\\Helpers\\Lavx",
+                "Enums": "Vxize\\Lavx\\Helpers\\Enums"
+            }
         }
     }
 }

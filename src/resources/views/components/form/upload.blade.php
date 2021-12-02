@@ -1,6 +1,6 @@
 @props([
     'disabled' => false,
-    'checked' => false,
+    'multiple' => true,
     'required' => false,
     'name' => '',
     'label' => '',
@@ -13,9 +13,10 @@
 <input 
     id="{{ $id ?? $name }}"
     name="{{ $name }}"
-    {{ $attributes->merge(['class' => 'rounded-lg shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 placeholder-gray-400']) }}
+    type="file"
+    {{ $attributes->merge(['class' => 'placeholder-gray-400']) }}
+    {{ $multiple ? 'multiple' : '' }}
     {{ $disabled ? 'disabled' : '' }}
-    {{ $checked ? 'checked' : '' }}
     {{ $required ? 'required' : '' }}
 >
 @if ($helper)

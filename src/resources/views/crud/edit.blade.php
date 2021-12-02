@@ -16,6 +16,7 @@
     submitWidth="{{ $submit_width ?? 'w-full' }}"
     submitDisabled="{{ $submit_disabled ?? false }}"
     routeKeyName="{{ $route_key_name ?? 'id' }}"
+    hasUpload="{{ $has_upload ?? false }}"
     :formData="$form_data ?? []"
 >
     {{ $slot ?? '' }}

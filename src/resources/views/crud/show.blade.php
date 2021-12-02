@@ -1,6 +1,6 @@
 <x-lavx::crud.show
     title="{{ $title ?? '' }}"
-    width="{{ $width ?? 'max-w-5xl' }}"
+    width="{{ $width ?? 'max-w-4xl' }}"
     margin="{{ $margin ?? 'mx-auto mt-6' }}"
     showReturn="{{ $show_return ?? true }}"
     return="{{ $return ?? '' }}"

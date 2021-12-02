@@ -1,6 +1,7 @@
 @props([
     'disabled' => false,
     'checked' => false,
+    'required' => false,
     'value' => '',
     'id',
     'name',
@@ -16,6 +17,7 @@
         value="{{ $value }}"
         disabled="{{ $disabled }}"
         checked="{{ $checked }}"
+        required="{{ $required }}"
         {{ $attributes }}
     />
     <span class="ml-2">{{ $label }}</span>

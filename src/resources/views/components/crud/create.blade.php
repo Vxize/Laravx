@@ -16,6 +16,7 @@
     'submitIcon' => 'save',
     'submitWidth' => 'w-full',
     'submitDisabled' => false,
+    'hasUpload' => false,
 ])
 <x-lavx::layout.page margin="{{ $margin }}">
     <x-lavx::h1 text="{{ $title }}" />
@@ -32,6 +33,7 @@
         submitColor="{{ $submitColor }}"
         submitWidth="{{ $submitWidth }}"
         submitDisabled="{{ $submitDisabled }}"
+        hasUpload="{{ $hasUpload }}"
     >
         @include( $form ?: 'forms.'.$path, $formData)
     </x-lavx::form>

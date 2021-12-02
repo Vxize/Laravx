@@ -26,7 +26,7 @@
         @endforeach
     @else
         @if (!$selected)
-            <option disabled selected value="">{{ __('lavx::sys.please_select') }}</option>
+            <option disabled selected value="">{{ __('lavx::sys.please').__('lavx::sys.select') }}</option>
         @endif
         @foreach ($option as $val => $text)
             <option

@@ -1,10 +1,8 @@
 <x-lavx::layout.page margin="mx-auto mt-6" :width="$width ?? 'max-w-lg' ">
-    @if (isset($title) && $title)
-        <x-lavx::h1
-            :color="$title_color ?? 'text-blue-800' "
-            :text="$title" 
-        />
-    @endif
+    <x-lavx::h1
+        :color="$title_color ?? 'text-red-600' "
+        :text="$title ?? __('lavx::sys.error') "
+    />
     @if (isset($subtitle) && $subtitle)
         <x-lavx::h2
             :color="$subtitle_color ?? 'text-green-800' "
@@ -19,13 +17,11 @@
             :external="$return_external ?? false"
         />
     @endif
-    @if (isset($alert) && $alert)
-        <x-lavx::alert
-            :color="$alert_color ?? '' "
-            :text="$alert"
-            :escaped="$alert_escaped ?? false"
-        />
-    @endif
+    <x-lavx::alert
+        :color="$alert_color ?? 'red' "
+        :text="$alert ?? __('lavx::sys.return_retry') "
+        :escaped="$alert_escaped ?? false"
+    />
     @if (isset($button_link) && $button_link)
         <x-lavx::button
             :link="$button_link"

@@ -11,12 +11,20 @@
     'submitWidth' => 'w-full',
     'submitDisabled' => false,
     'submit' => null,
+    'hasUpload' => false,
 ])
 {{ $above }}
 @if ($showError)
     <x-lavx::form.error :errors="$errors" title="{{ __($errorTitle) }}" />
 @endif
-<form method="{{ $type === 'get' ? 'GET' : 'POST' }}" action="{{ $action }}" autocomplete="off" {{ $attributes }} >
+<form method="{{ $type === 'get' ? 'GET' : 'POST' }}"
+    action="{{ $action }}"
+    autocomplete="off"
+    @if ($hasUpload)
+        enctype="multipart/form-data"
+    @endif
+    {{ $attributes }} 
+>
     @if ($type !== 'get')
         @csrf
     @endif

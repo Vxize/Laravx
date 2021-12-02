@@ -43,7 +43,7 @@ return [
     'distinct' => ' :attribute 不能重複。',
     'email' => ' :attribute 必須是有效的電子郵箱地址。',
     'ends_with' => ' :attribute 必須以： :values 結尾。',
-    'exists' => '無效的選項： :attribute ',
+    'exists' => ' :attribute 不存在',
     'file' => ' :attribute 必須是文件。',
     'filled' => ' :attribute 不能爲空白。',
     'gt' => [

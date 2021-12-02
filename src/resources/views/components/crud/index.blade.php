@@ -8,6 +8,8 @@
     'columns' => [],
     'rawColumns' => [],
     'extraColumns' => [],
+    'actionColumnText' => [],
+    'actionColumnIcon' => [],
     'add' => true,
     'download' => true,
     'search' => true,
@@ -90,6 +92,8 @@
         :columns="$columns"
         :rawColumns="$rawColumns"
         :extraColumns="$extraColumns"
+        :actionColumnText="$actionColumnText"
+        :actionColumnIcon="$actionColumnIcon"
         :path="$path"
         :view="$view"
         :edit="$edit"

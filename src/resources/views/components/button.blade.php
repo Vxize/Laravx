@@ -41,13 +41,14 @@ switch ($color) {
         $color_class = 'bg-blue-600 hover:bg-blue-300';
         break;
 }
+$cursor = $link === '_' ? 'cursor-not-allowed' : 'cursor-pointer';
 @endphp
-@if ($type === 'button')
+@if ($type === 'button' || $link === '_')
 <button
 @else
 <a
 @endif
-    class="no-underline text-center font-bold rounded-lg shadow-lg uppercase tracking-widest cursor-pointer outline-none focus:outline-none disabled:opacity-50
+    class="no-underline text-center font-bold rounded-lg shadow-lg uppercase tracking-widest outline-none focus:outline-none disabled:opacity-50
         {{ $width }}
         {{ $maxWidth }}
         {{ $margin }}
@@ -56,9 +57,12 @@ switch ($color) {
         {{ $textSize  }}
         {{ $textColor }}
         {{ $color_class }}
+        {{ $cursor }}
         {{ $link ? '' : 'opacity-30' }}
     "
-    @if ($link)
+    @if ($link === '_')
+        disabled
+    @else
         href="{{ $link }}"
     @endif
     
@@ -72,7 +76,7 @@ switch ($color) {
         <x-lavx::icon prefix="{{ $iconPrefix }}" icon="{{ $icon }}" />
     @endif
     {{ $text }}
-@if ($type === 'button')
+@if ($type === 'button' || $link === '_')
 </button>
 @else
 </a>

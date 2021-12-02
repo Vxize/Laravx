@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
 
+use Illuminate\Support\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
+
 class LavxServiceProvider extends ServiceProvider
 {
     
@@ -47,5 +50,22 @@ class LavxServiceProvider extends ServiceProvider
                 ->action(__('lavx::email.verify_email'), $url)
                 ->line(__('lavx::email.verify_email_ignore'));
         });
+
+        // add paginate to Collections
+        // From https://github.com/spatie/laravel-collection-macros/blob/main/src/Macros/Paginate.php
+        if (!Collection::hasMacro('paginate')) {            
+            Collection::macro('paginate', function (int $perPage = 15, string $pageName = 'page', int $page = null, int $total = null, array $options = []): LengthAwarePaginator {
+                $page = $page ?: LengthAwarePaginator::resolveCurrentPage($pageName);
+                $results = $this->forPage($page, $perPage)->values();
+                $total = $total ?: $this->count();
+                $options += [
+                    'path' => LengthAwarePaginator::resolveCurrentPath(),
+                    'pageName' => $pageName,
+                ];
+                return new LengthAwarePaginator($results, $total, $perPage, $page, $options);
+            });
+        }
+
+
     }
 }

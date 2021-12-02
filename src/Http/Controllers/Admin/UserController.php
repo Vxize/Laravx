@@ -24,15 +24,15 @@ class UserController extends ResourceController
     public function columns($type = 'index')
     {
         $full = [
-            'cn_name' => 'lavx::profile.cn_name',
-            'first_name' => 'lavx::profile.first_name',
-            'last_name' => 'lavx::profile.last_name',
+            'profile.cn_name' => 'lavx::profile.cn_name',
+            'profile.first_name' => 'lavx::profile.first_name',
+            'profile.last_name' => 'lavx::profile.last_name',
             'email' => 'lavx::user.email',
-            'phone' => 'lavx::profile.phone',
-            'address' => 'lavx::profile.address',
-            'city' => 'lavx::profile.city',
-            'state' => 'lavx::profile.state',
-            'zipcode' => 'lavx::profile.zipcode',
+            'profile.phone' => 'lavx::profile.phone',
+            'profile.address' => 'lavx::profile.address',
+            'profile.city' => 'lavx::profile.city',
+            'profile.state' => 'lavx::profile.state',
+            'profile.zipcode' => 'lavx::profile.zipcode',
         ];
         switch ($type) {
             case 'show':
@@ -43,11 +43,11 @@ class UserController extends ResourceController
                 break;
             case 'index':
                 return [
-                    'cn_name' => 'lavx::profile.cn_name',
-                    'first_name' => 'lavx::profile.first_name',
-                    'last_name' => 'lavx::profile.last_name',
+                    'profile.cn_name' => 'lavx::profile.cn_name',
+                    'profile.first_name' => 'lavx::profile.first_name',
+                    'profile.last_name' => 'lavx::profile.last_name',
                     'email' => 'lavx::user.email',
-                    'phone' => 'lavx::profile.phone',
+                    'profile.phone' => 'lavx::profile.phone',
                 ];
                 break;
             case 'extra':
@@ -72,16 +72,17 @@ class UserController extends ResourceController
     public function search(Request $request)
     {
         $search = $request->input('search', null);
-        $users = User::leftJoin('profiles', 'users.id', '=', 'profiles.user_id');
         if ($search) {
-            return $users->where('email', 'LIKE', '%'.$search.'%')
-                ->orWhere('cn_name', 'LIKE', '%'.$search.'%')
-                ->orWhere('first_name', 'LIKE', '%'.$search.'%')
-                ->orWhere('last_name', 'LIKE', '%'.$search.'%')
-                ->orWhere('phone', 'LIKE', '%'.$search.'%')
-                ->latest('users.created_at');
+            return User::with('profile')
+                ->where('email', 'LIKE', '%'.$search.'%')
+                ->orWhereHas('profile', function($query) use ($search) {
+                    $query->Where('cn_name', 'LIKE', '%'.$search.'%')
+                    ->orWhere('first_name', 'LIKE', '%'.$search.'%')
+                    ->orWhere('last_name', 'LIKE', '%'.$search.'%')
+                    ->orWhere('phone', 'LIKE', '%'.$search.'%');
+                })->latest('created_at');
         }
-        return $users->latest('users.created_at');
+        return User::with('profile')->latest('created_at');
     }
     
     public function extraTable($data)
@@ -201,9 +202,9 @@ class UserController extends ResourceController
      */
     public function show(User $user)
     {
-        $record = $user->profile;
-        $record->email = $user->email;
-        return $this->showRecord($record, [
+        // $record = $user->profile;
+        // $record->email = $user->email;
+        return $this->showRecord($user, [
             'delete' => false,
             'edit_route' => 'admin.profiles.edit',
         ]);

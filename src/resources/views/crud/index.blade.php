@@ -8,6 +8,8 @@
     :columns=" $columns ?? [] "
     :rawColumns=" $raw_columns ?? [] "
     :extraColumns=" $extra_columns ?? [] "
+    :actionColumnText=" $action_column_text ?? [] "
+    :actionColumnIcon=" $action_column_icon ?? [] "
     add="{{ $add ?? true }}"
     download="{{ $download ?? true }}"
     view="{{ $view ?? true }}"

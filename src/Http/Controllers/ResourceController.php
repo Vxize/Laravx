@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 class ResourceController extends Controller
 {
     protected 
-        $rules = [],  //rules to valid form input
+        $rules = [],  //common rules to valid form input
+        $insert_rules = [],  //rules to valid form input when insert record
+        $update_rules = [],  //rules to valid form input when update record
         $path = '',  // route name for resource
         $name = '',  // name for view, usually the model name
         $titles = [  // title to override default 
@@ -27,6 +29,16 @@ class ResourceController extends Controller
             'store' => null,
             'update' => null,
             'destroy' => null,
+        ],
+        $messages = [  // message to show for store/update result
+            'store' => [
+                'success' => 'lavx::form.save_success',
+                'error' => 'lavx::form.submit_error'
+            ],
+            'update' => [
+                'success' => 'lavx::form.save_success',
+                'error' => 'lavx::form.submit_error'
+            ]
         ],
         $route_key_name = 'id',  // can be changed by Model->getRouteKeyName()
         $paginate = 7  // number per page
@@ -110,7 +122,7 @@ class ResourceController extends Controller
     // validate and insert new record to DB, return id of new inserted record
     public function insertOneRecord($data = [])
     {
-        $validator = validator($data, $this->rules);        
+        $validator = validator($data, array_merge($this->rules, $this->insert_rules));
         if ($validator->fails()) {
             $validator->validated();
             session([
@@ -125,7 +137,9 @@ class ResourceController extends Controller
     {
         $id = $this->insertOneRecord(array_merge($request->all(), $data));
         $result = $id ? 'success' : 'error';
-        $message = $id ? 'lavx::form.save_success' : 'lavx::form.submit_error';
+        $message = $id
+            ? $this->messages['store']['success']
+            : $this->messages['store']['error'];
         return redirect()->route(
             $this->redirects['store'] ?? $this->path.'.index',
             $id ?? null
@@ -156,7 +170,7 @@ class ResourceController extends Controller
     // validate and update an old record, return number of affected rows
     public function updateOneRecord($record, $data = [])
     {
-        $validator = validator($data, $this->rules);
+        $validator = validator($data, array_merge($this->rules, $this->update_rules));
         if ($validator->fails()) {            
             $validator->validated();
             session([
@@ -171,7 +185,9 @@ class ResourceController extends Controller
     {
         $rows = $this->updateOneRecord($record, array_merge($request->all(), $data));
         $result = $rows ? 'success' : 'error';
-        $message = $rows ? 'lavx::form.save_success' : 'lavx::form.update_error';
+        $message = $rows
+            ? $this->messages['update']['success']
+            : $this->messages['update']['error'];
         return redirect()->route(
             $this->redirects['update'] ?? $this->path.'.index',
             $record->id ?? null

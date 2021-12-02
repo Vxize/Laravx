@@ -5,6 +5,8 @@
     'columns' => [],
     'rawColumns' => [],
     'extraColumns' => [],
+    'actionColumnText' => [],
+    'actionColumnIcon' => [],
     'view' => true,
     'edit' => true,
     'delete' => true,
@@ -17,9 +19,9 @@
     $action = $view || $edit || $delete;
     if ($action && !$actionColumn) {
         $default_action_column = [];
-        if ($view)  $default_action_column[] = __('lavx::sys.view');
-        if ($edit)  $default_action_column[] = __('lavx::sys.edit');
-        if ($delete)  $default_action_column[] = __('lavx::sys.delete');
+        if ($view)  $default_action_column[] = $actionColumnText['view'] ?? __('lavx::sys.view');
+        if ($edit)  $default_action_column[] = $actionColumnText['edit'] ?? __('lavx::sys.edit');
+        if ($delete)  $default_action_column[] = $actionColumnText['delete'] ?? __('lavx::sys.delete');
         $default_action_column = implode(' | ', $default_action_column);
     }
 @endphp
@@ -79,7 +81,7 @@
                             <td class="py-2 px-6 text-center">
                                 @if ($view)
                                     <x-lavx::button
-                                        icon="info-circle"
+                                        icon="{{ $actionColumnIcon['view'] ?? 'info-circle' }}"
                                         color="blue"
                                         display="inline-block"
                                         text=""
@@ -92,7 +94,7 @@
                                 @endif
                                 @if ($edit)
                                     <x-lavx::button
-                                        icon="edit"
+                                        icon="{{ $actionColumnIcon['edit'] ?? 'edit' }}"
                                         color="purple"
                                         display="inline-block"
                                         text=""
@@ -106,7 +108,7 @@
                                 @if ($delete)
                                     <span x-data="{ delete_{{Arr::get($row, 'id')}} : false }">
                                         <x-lavx::button
-                                            icon="trash-alt"
+                                            icon="{{ $actionColumnIcon['delete'] ?? 'trash-alt' }}"
                                             color="red"
                                             display="inline-block"
                                             text=""
