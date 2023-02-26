@@ -7,6 +7,9 @@
     'action' => '',
     'form' => '',
     'aboveForm' => '',
+    'aboveFormData' => [],
+    'belowForm' => '',
+    'belowFormData' => [],
     'alert' => '',
     'alertColor' => 'blue',
     'alertEscaped' => false,
@@ -17,16 +20,17 @@
     'submitWidth' => 'w-full',
     'submitDisabled' => false,
     'hasUpload' => false,
+    'errorTitle' => 'lavx::form.submit_error',
 ])
 <x-lavx::layout.page margin="{{ $margin }}">
     <x-lavx::h1 text="{{ $title }}" />
     @if ($showReturn)
-        <x-lavx::button link="{{ $return ?: route($path.'.index') }}" color="green" />
+        <x-lavx::button link="{{ $return ?: url()->previous() ?: route($path.'.index') }}" color="green" />
     @endif
     @if ($alert)
         <x-lavx::alert :text="$alert" color="{{ $alertColor }}" escaped="{{ $alertEscaped }}" />
     @endif
-    {{ $aboveForm }}
+    @includeIf($aboveForm, $aboveFormData)
     <x-lavx::form action="{{ $action ?: route($path.'.store') }}"
         submitText="{{ $submitText }}"
         submitIcon="{{ $submitIcon }}"
@@ -34,8 +38,10 @@
         submitWidth="{{ $submitWidth }}"
         submitDisabled="{{ $submitDisabled }}"
         hasUpload="{{ $hasUpload }}"
+        errorTitle="{{ $errorTitle }}"
     >
         @include( $form ?: 'forms.'.$path, $formData)
     </x-lavx::form>
+    @includeIf($belowForm, $belowFormData)
     {{ $slot ?? '' }}
 </x-lavx::layout.page>

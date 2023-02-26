@@ -1,6 +1,6 @@
 @props([
-    'above' => '',
-    'below' => '',
+    'above_form' => '',
+    'below_form' => '',
     'action' => '',
     'type' => '',
     'showError' => true,
@@ -13,9 +13,9 @@
     'submit' => null,
     'hasUpload' => false,
 ])
-{{ $above }}
-@if ($showError)
-    <x-lavx::form.error :errors="$errors" title="{{ __($errorTitle) }}" />
+{{ $above_form }}
+@if ($showError && isset($errors))
+    <x-lavx::form.error :errors=" $errors" title="{{ __($errorTitle) }}" />
 @endif
 <form method="{{ $type === 'get' ? 'GET' : 'POST' }}"
     action="{{ $action }}"
@@ -53,4 +53,4 @@
     @endif
 
 </form>
-{{ $below }}
+{{ $below_form }}

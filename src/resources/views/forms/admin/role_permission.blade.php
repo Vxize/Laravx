@@ -5,5 +5,5 @@
             label="{{ __('permission.'.$permission) }} ({{ $permission }})"
             checked="{{ in_array($permission, $role_permissions) }}"
         />
-    </div>    
+    </div>
 @endforeach

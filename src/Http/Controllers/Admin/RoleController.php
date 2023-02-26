@@ -6,8 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Vxize\Lavx\Http\Controllers\Admin\UserController as AdminUser;
 use Vxize\Lavx\Http\Controllers\ResourceController;
-use App\Http\Controllers\Admin\UserController as AdminUser;
 
 class RoleController extends ResourceController
 {
@@ -18,33 +18,23 @@ class RoleController extends ResourceController
         ],
         $path = 'admin.roles',
         $name = 'lavx::user.role',
-        $model = 'Spatie\\Permission\\Models\\Role',
-        $paginate = 7
-        ;
+        $model = 'Spatie\\Permission\\Models\\Role'
+    ;
 
     public function columns($type = 'index')
     {
-        $common = [
-            'name' => 'lavx::sys.name',
-        ];
         switch ($type) {
-            case 'show':
-                return $common;
-                break;
-            case 'download':
-                return $common;
-                break;
-            case 'index':
-                return $common;
-                break;
             case 'extra':
                 return [
+                    'description' => 'lavx::sys.description',
                     'permission' => 'lavx::user.permission',
                     'user' => 'lavx::user.user',
                 ];
                 break;
             default:
-                return [];
+                return [
+                    'name' => 'lavx::sys.name',
+                ];
                 break;
         }
     }
@@ -52,17 +42,16 @@ class RoleController extends ResourceController
     public function search(Request $request)
     {
         $search = $request->input('search', null);
-        if ($search) {
-            return Role::where('name', 'LIKE', '%'.$search.'%')
-                    ->orderBy('name');
-        }
-        return Role::orderBy('name');
+        return Role::orderBy('name')->when($search, function ($query, $search) {
+            return $query->where('name', 'LIKE', '%'.$search.'%');
+        });
     }
     
     public function extraTable($data)
     {
         $result = [];
         foreach ($data as $num => $row) {
+            $result[$num]['description'] = __('role.'.$row->name);
             $result[$num]['permission'] = [
                 'type' => 'button',
                 'icon' => 'eye',

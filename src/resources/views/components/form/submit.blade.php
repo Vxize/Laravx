@@ -8,7 +8,7 @@
     'textColor' => 'text-white',
     'color' => 'blue',
     'text' => __('lavx::sys.save'),
-    'iconPrefix' => 'fas fa-fw',
+    'iconPrefix' => 'fa-solid fa-fw',
     'icon' => 'save',
     'disabled' => false,
 ])

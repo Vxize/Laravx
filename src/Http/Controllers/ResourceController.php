@@ -38,6 +38,10 @@ class ResourceController extends Controller
             'update' => [
                 'success' => 'lavx::form.save_success',
                 'error' => 'lavx::form.submit_error'
+            ],
+            'destroy' => [
+                'success' => 'lavx::form.delete_success',
+                'error' => 'lavx::form.delete_error'
             ]
         ],
         $route_key_name = 'id',  // can be changed by Model->getRouteKeyName()
@@ -69,6 +73,12 @@ class ResourceController extends Controller
             case 'index':
                 return $common;
                 break;
+            case 'search':
+                return $common;
+                break;
+            case 'update':  // columns to watch for update
+                return $common;
+                break;
             case 'extra':
                 return [];
                 break;               
@@ -96,9 +106,11 @@ class ResourceController extends Controller
         }
         $table = $table_data->paginate($parm['paginate'] ?? $this->paginate);
         return view($parm['template'] ?? $this->views['index'], array_merge([
-            'title' => __($this->titles['index']) ?? __($this->name),
+            'title' => __($this->titles['index'] ?? $this->name),
             'table' => $table,
             'path' => $parm['path'] ?? $this->path,
+            'route_key_name' => $this->route_key_name,
+            'searchable' => implode(', ', array_map(fn($value) => __($value), $this->columns('search'))),
             'columns' => $parm['table_columns'] ?? $this->columns('index'),
             'extra_columns' => $parm['extra_columns'] ?? $this->columns('extra') ?? [],
             'extra_table' => $parm['extra_table'] ?? $this->extraTable($table),
@@ -108,7 +120,9 @@ class ResourceController extends Controller
     public function createRecord($parm = [])
     {
         return view($parm['template'] ?? $this->views['create'], array_merge([
-            'title' => __($this->titles['create']) ?? __('lavx::form.add_new').__($this->name),
+            'title' => isset($this->titles['create'])
+                ? __($this->titles['create'])
+                : __('lavx::form.add_new').__($this->name),
             'path' => $this->path,
         ], $parm));
     }
@@ -117,6 +131,18 @@ class ResourceController extends Controller
     public function beforeSave($data)
     {
         return $data;
+    }
+
+    // things to do on success store
+    public function onStoreSuccess(Request $request, $record)
+    {
+        
+    }
+
+    // things to do on failed store
+    public function onStoreFail(Request $request)
+    {
+        
     }
 
     // validate and insert new record to DB, return id of new inserted record
@@ -130,26 +156,31 @@ class ResourceController extends Controller
             ]);
             return 0;
         }        
-        return $this->model::create($this->beforeSave($data))->id ?? 0;
+        return $this->model::create($this->beforeSave($data)) ?? null;
     }
 
     public function storeRecord(Request $request, $data = [])
     {
-        $id = $this->insertOneRecord(array_merge($request->all(), $data));
-        $result = $id ? 'success' : 'error';
-        $message = $id
-            ? $this->messages['store']['success']
-            : $this->messages['store']['error'];
+        $record = $this->insertOneRecord(array_merge($request->all(), $data));
+        if ($record) {
+            $result = 'success';
+            $message = $this->messages['store']['success'];
+            $this->onStoreSuccess($request, $record);
+        } else {
+            $result = 'error';
+            $message = $this->messages['store']['error'];
+            $this->onStoreFail($request);
+        }
         return redirect()->route(
-            $this->redirects['store'] ?? $this->path.'.index',
-            $id ?? null
+            $request->_redirect ?? $this->redirects['store'] ?? $this->path.'.index',
+            $record ?? null
         )->with($result, __($message));
     }
  
     public function showRecord($record, $parm = [])
     {
         return view($parm['template'] ?? $this->views['show'], array_merge([
-            'title' => __($this->titles['show']) ?? __($this->name),
+            'title' => __($this->titles['show'] ?? $this->name),
             'record' => $record,
             'path' => $this->path,
             'columns' => $this->columns('show'),
@@ -160,7 +191,9 @@ class ResourceController extends Controller
     public function editRecord($record, $parm = [])
     {
         return view($parm['template'] ?? $this->views['edit'], array_merge([
-            'title' => __($this->titles['edit']) ?? __('lavx::sys.edit').__($this->name),
+            'title' => isset($this->titles['edit'])
+                ? __($this->titles['edit'])
+                : __('lavx::sys.edit').__($this->name),
             'path' => $this->path,
             'route_key_name' => $this->route_key_name,
             'record' => $record
@@ -180,25 +213,85 @@ class ResourceController extends Controller
         }
         return $record->update($this->beforeSave($data));
     }
+
+    // things to do on success update
+    public function onUpdateSuccess(Request $request, $record, $old_record)
+    {
+        
+    }
+
+    // things to do on failed update
+    public function onUpdateFail(Request $request, $record)
+    {
+        
+    }
+
+    public function columnsUpdated($new_record, $old_record, $columns = [])
+    {
+        $check_columns = $columns ?: $this->columns('update');
+        if (empty($check_columns)) {
+            return [];
+        }
+        $old_columns = $old_record->only($check_columns);
+        $new_columns = $new_record->only($check_columns);
+        if ($old_columns == $new_columns) {
+            return [];
+        }
+        $unchanged_columns = array_intersect_assoc($old_columns, $new_columns);
+        return [
+            'old' => array_diff_assoc($old_columns, $unchanged_columns),
+            'new' => array_diff_assoc($new_columns, $unchanged_columns),
+        ];
+    }
  
     public function updateRecord(Request $request, $record, $data = [])
     {
-        $rows = $this->updateOneRecord($record, array_merge($request->all(), $data));
-        $result = $rows ? 'success' : 'error';
-        $message = $rows
-            ? $this->messages['update']['success']
-            : $this->messages['update']['error'];
+        $old_record = $record->replicate();
+        //return rows affected by the update
+        $rows = $this->updateOneRecord($record, array_merge($request->all(), $data)); 
+        if ($rows) {
+            $result = 'success';
+            $message = $this->messages['update']['success'];
+            $this->onUpdateSuccess($request, $record, $old_record);
+        } else {
+            $result = 'error';
+            $message = $this->messages['update']['error'];
+            $this->onUpdateFail($request, $record);
+        }
         return redirect()->route(
-            $this->redirects['update'] ?? $this->path.'.index',
-            $record->id ?? null
+            $request->_redirect ?? $this->redirects['update'] ?? $this->path.'.index',
+            $record ?? null
         )->with($result, __($message));
     }
  
+    // things to do on success destroy
+    public function onDestroySuccess($record)
+    {
+        
+    }
+
+    // things to do on failed update
+    public function onDestroyFail($record)
+    {
+        
+    }
+
     public function destroyRecord($record)
     {
-        $record->delete();
+        $deleted_record = $record->replicate();
+        $deleted = $record->delete();
+        if ($deleted) {
+            $result = 'success';
+            $message = $this->messages['destroy']['success'];
+            $this->onDestroySuccess($deleted_record);
+        } else {
+            $result = 'error';
+            $message = $this->messages['destroy']['error'];
+            $this->onDestroyFail($deleted_record);
+        }
         return redirect()->route(
-            $this->redirects['destroy'] ?? $this->path.'.index'
-        )->with('success', __('lavx::form.delete_success'));
+            $this->redirects['destroy'] ?? $this->path.'.index',
+            $deleted_record ?? null
+        )->with($result, __($message));
     }
 }

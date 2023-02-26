@@ -3,9 +3,10 @@
 namespace Vxize\Lavx\Http\Controllers\User;
 
 use Illuminate\Http\Request;
-use Vxize\Lavx\Http\Controllers\ResourceController;
 use Illuminate\Support\Facades\Notification;
-use App\Notifications\ChangeEmailNotification;
+use Vxize\Lavx\Events\UserEmailChanged;
+use Vxize\Lavx\Http\Controllers\ResourceController;
+use Vxize\Lavx\Notifications\ChangeEmailNotification;
 
 class ChangeEmailController extends ResourceController
 {
@@ -26,7 +27,7 @@ class ChangeEmailController extends ResourceController
             'form' => 'lavx::forms.users.change-email',
             'return' => route('settings'),
             'alert' => __('lavx::user.recommend_gmail'),
-            'alertColor' => 'red',
+            'alert_color' => 'red',
         ]);
     }
 
@@ -48,6 +49,7 @@ class ChangeEmailController extends ResourceController
             'email' => strtolower($request->email),
         ]);
         $user->markEmailAsVerified();
+        event(new UserEmailChanged($user, $request->ip()));
         return redirect()->route('form.result')
             ->with('success', __('lavx::email.update_success'))
             ->with('return', route('settings'));

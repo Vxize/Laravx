@@ -17,7 +17,8 @@
             ],
             "aliases": {
                 "Lavx": "Vxize\\Lavx\\Helpers\\Lavx",
-                "Enums": "Vxize\\Lavx\\Helpers\\Enums"
+                "Enums": "Vxize\\Lavx\\Helpers\\Enums",
+                "Stripe": "Vxize\\Lavx\\Helpers\\Stripe"
             }
         }
     }

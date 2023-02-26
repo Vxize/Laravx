@@ -8,50 +8,64 @@
     'record' => [],
     'columns' => [],
     'rawColumns' => [],
+    'hideColumns' => [],
     'alert' => '',
     'alertColor' => 'blue',
+    'alertEscaped' => false,
     'edit' => true,
     'editRoute' => '',
+    'editText' => '',
     'delete' => true,
     'deleteRoute' => '',
     'routeKeyName' => 'id',
     'textSize' => 'lg:text-lg md:text-base text-sm',
+    'aboveTable' => '',
+    'aboveTableData' => [],
+    'belowTable' => '',
+    'belowTableData' => [],
 ])
 <x-lavx::layout.page margin="{{ $margin }}" width="{{ $width }}">
     <x-lavx::h1 text="{{ $title }}" />
     @if ($showReturn)
         <x-lavx::button
-            link="{{ $return ?: route($path.'.index') }}"
+            link="{{ $return ?: url()->previous() ?: route($path.'.index') }}"
             color="green"
             width="w-1/2"
         />
     @endif
     @if ($alert)
-        <x-lavx::alert text="{{ $alert }}" color="{{ $alertColor }}" />
+        <x-lavx::alert text="{{ $alert }}" color="{{ $alertColor }}" escaped="{{ $alertEscaped }}" />
     @endif
+
+    @includeIf($aboveTable, $aboveTableData ?: ['record' => $record])
+
     <x-lavx::dl
         :record="$record"
         :columns="$columns"
         :rawColumns="$rawColumns"
+        :hideColumns="$hideColumns"
         :textSize="$textSize"
     />
+
+    @includeIf($belowTable, $belowTableData ?: ['record' => $record])
+
     @if ($edit)
         <x-lavx::button
-            link="{{ route($editRoute ?: $path.'.edit', $record->{$routeKeyName}) }}"
-            icon="edit"
-            text="{{ __('lavx::sys.edit') }}"
+            link="{{ route($editRoute ?: $path.'.edit', Arr::get($record, $routeKeyName)) }}"
+            icon="pen-to-square"
+            text="{{ __($editText ?: 'lavx::sys.edit') }}"
             width="w-1/2"
         />
     @endif
     @if ($delete)
         <div x-data="{ del : false }">
             <x-lavx::button
-                icon="trash-alt"
+                icon="trash-can"
                 color="red"
                 :text="__('lavx::sys.delete')"
                 link="#"
                 width="w-1/2"
-                @click=" del = true"
+                @click.prevent=" del = true"
             />
             <div x-cloak x-show="del" x-transition class="p-3 mx-auto max-w-md bg-white border border-gray-300 rounded-lg shadow-lg mt-2 text-center">
                 <x-lavx::h3 :text="__('lavx::sys.confirm').__('lavx::sys.delete').'？'" class="text-red-600 font-semibold" />
@@ -69,12 +83,12 @@
                     </div>
                     <div class="w-full md:w-1/2 p-2">
                         <x-lavx::button
-                            icon="times"
+                            icon="xmark"
                             color="green"
                             display="inline-block"
                             :text="__('lavx::sys.no')"
                             link="#"
-                            @click="del = false"
+                            @click.prevent="del = false"
                         />
                     </div>
                 </x-lavx::flex>

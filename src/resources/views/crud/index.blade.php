@@ -1,5 +1,6 @@
 <x-lavx::crud.index
     title="{{ $title ?? '' }}"
+    titleWidth="{{ $title_width ?? 'md:w-4/12' }}"
     width="{{ $width ?? 'max-w-7xl' }}"
     margin="{{ $margin ?? 'mx-auto mt-6' }}"
     path="{{ $path ?? '' }}"
@@ -20,6 +21,15 @@
     paginator="{{ $paginator ?? true}}"
     :actionColumn="$actionColumn ?? '' "
     return="{{ $return ?? '' }}"
+    routeKeyName="{{ $route_key_name ?? 'id' }}"
+    searchable="{{ $searchable ?? '' }}"
+    filter="{{ $filter ?? '' }}"
+    :filterData=" $filter_data ?? [] "
+    noRecordMessage="{{ $no_record_message ?? 'lavx::sys.no_record' }}"
+    aboveTable="{{ $above_table ?? '' }}"
+    :aboveTableData=" $above_table_data ?? [] "
+    belowTable="{{ $below_table ?? '' }}"
+    :belowTableData=" $below_table_data ?? [] "
 >
     {{ $slot ?? '' }}
 </x-lavx::crud.index>

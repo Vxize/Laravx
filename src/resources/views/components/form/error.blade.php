@@ -6,7 +6,7 @@
 @if ($errors->any())
     <x-lavx::alert color="red" align="text-left">
         <x-lavx::h4>
-            <x-lavx::icon icon="times-circle" />
+            <x-lavx::icon icon="circle-xmark" />
             {{ __($title) }}
         </x-lavx::h4>
         <x-lavx::ul>

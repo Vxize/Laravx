@@ -1,7 +1,7 @@
 @props([
     'link' => '',
     'icon' => '',
-    'text' => '',
+    'text' => null,
     'active' => false,
     'submit' => false,
 ])
@@ -29,7 +29,7 @@
     }}
 ">
     <x-lavx::icon icon="{{ $icon }}" class="mx-2" />
-    <span>{{ $text }}</span>
+    <span>{{ $text ?? $slot }}</span>
 
 @if ($submit)
     </button>

@@ -4,11 +4,12 @@
     'required' => false,
     'name' => '',
     'label' => '',
+    'labelDisplay' => 'block',
     'helper' => '',
     'id' => null,
 ])
 @if ($label)
-    <x-lavx::form.label for="{{ $name }}" value="{{ $label }}" />
+    <x-lavx::form.label for="{{ $name }}" value="{{ $label }}" display="{{ $labelDisplay }}" />
 @endif
 <input 
     id="{{ $id ?? $name }}"

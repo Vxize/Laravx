@@ -7,6 +7,9 @@
     action="{{ $action ?? '' }}"
     form="{{ $form ?? '' }}"
     aboveForm="{{ $above_form ?? '' }}"
+    :aboveFormData=" $above_form_data ?? [] "
+    belowForm="{{ $below_form ?? '' }}"
+    :belowFormData=" $below_form_data ?? [] "
     :alert=" $alert ?? '' "
     alertColor="{{ $alert_color ?? 'blue' }}"
     alertEscaped="{{ $alert_escaped ?? false }}"
@@ -16,6 +19,7 @@
     submitWidth="{{ $submit_width ?? 'w-full' }}"
     submitDisabled="{{ $submit_disabled ?? false }}"
     hasUpload="{{ $has_upload ?? false }}"
+    errorTitle="{{ $error_title ?? 'lavx::form.submit_error' }}"
     :formData="$form_data ?? []"
 >
     {{ $slot ?? '' }}

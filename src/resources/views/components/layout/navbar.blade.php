@@ -3,16 +3,13 @@
     {{ config('lavx.navbar_background_color', 'bg-gray-50') }}
     {{ config('lavx.navbar_text_size', '') }}
 ">
-    <div @click.away="open = false" x-data="{ open: false }"
-        class="flex flex-col w-full text-gray-600 dark-mode:text-gray-200 dark-mode:bg-gray-800 flex-shrink-0">
-        <div class="flex-shrink-0 px-8 py-4 flex flex-row items-center justify-between">
-            <a href="/" class="text-lg font-semibold tracking-widest text-gray-900 uppercase rounded-lg dark-mode:text-white focus:outline-none focus:shadow-outline">
+    <div @click.away="open = false" x-data="{ open: false }" class="flex flex-col w-full text-gray-600 dark-mode:text-gray-200 dark-mode:bg-gray-800 flex-shrink-0">
+        <div class="flex-shrink-0 px-4 py-4 flex flex-row items-center justify-between">
+            <a href="/" class="text-sm font-semibold text-gray-800 uppercase rounded-lg dark-mode:text-white focus:outline-none focus:shadow-outline">
                 @if (config('lavx.site_logo', ''))
-                    <br>
-                    <img src="{{ config('lavx.site_logo', '') }}" class="md:block hidden" />
-                @else
-                    {{ config('app.name') }}
+                    <img src="{{ config('lavx.site_logo', '') }}" class="md:inline-block hidden h-8 w-8" />
                 @endif
+                {{ config('app.name') }}
             </a>
             <button class="md:hidden rounded-lg focus:outline-none focus:shadow-outline" @click="open = !open">
                 <svg fill="currentColor" viewBox="0 0 20 20" class="w-6 h-6">

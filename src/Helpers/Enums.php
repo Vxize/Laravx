@@ -18,7 +18,7 @@ class Enums
     public static function list($name)
     {
         $keys = self::get($name);
-        if (!$keys) {
+        if (! $keys) {
             return null;
         }
         $trans = self::trans($name);

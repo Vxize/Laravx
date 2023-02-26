@@ -1,6 +1,6 @@
 @props([
-    'prefix' => 'fas fa-fw',
-    'icon' => 'info-circle',
+    'prefix' => 'fa-solid fa-fw',
+    'icon' => 'circle-info',
 ])
 @php
     $icon_class = $prefix.' fa-'.$icon;

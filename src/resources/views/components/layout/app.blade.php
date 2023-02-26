@@ -8,7 +8,7 @@
         <title>{{ config('app.name', 'Lavx') }}</title>
 
         <!-- Styles -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
         {!! config('lavx.site_font', '') !!}
         <style>
@@ -19,6 +19,10 @@
         </style>
 
         <!-- Scripts -->
+        @env('local')
+            <script src="https://cdn.tailwindcss.com"></script>
+        @endenv
+        <script defer src="https://unpkg.com/alpinejs@3.10.2/dist/cdn.min.js"></script>
         <script src="{{ asset('js/app.js') }}" defer></script>
     </head>
     <body>

@@ -4,6 +4,7 @@ namespace Vxize\Lavx\Http\Controllers\User;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Vxize\Lavx\Events\UserPasswordChanged;
 use Vxize\Lavx\Http\Controllers\ResourceController;
 
 class ChangePasswordController extends ResourceController
@@ -31,9 +32,11 @@ class ChangePasswordController extends ResourceController
     public function store(Request $request)
     {
         $request->validate($this->rules);
-        $request->user()->update([
+        $user = $request->user();
+        $user->update([
             'password' => Hash::make($request->new_password)
         ]);
+        event(new UserPasswordChanged($user, $request->ip()));
         return redirect()->route('form.result')
             ->with('success', __('lavx::form.save_success'))
             ->with('return', route('settings'));

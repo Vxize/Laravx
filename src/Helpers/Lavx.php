@@ -9,10 +9,22 @@ class Lavx
         return strtolower(\Str::random($length));
     }
 
-    public static function inUserTime($time = null)
+    // convert utc time to another timezone
+    // default is convert current time to user's timezone
+    public static function toTimeZone($time = null, $time_zone = null)
     {
-        $utc_time = $time ? \Carbon::parse($time) : now();
-        return $utc_time->tz(\Auth::user()->time_zone);
+        $utc_time = $time ? \Carbon::parse($time, 'UTC') : now();
+        return $utc_time->tz($time_zone ?? auth()->user()->time_zone ?? 'UTC');
+    }
+
+    // convert another timezone to utc time
+    // default is convert current time in user's timezone to utc
+    public static function fromTimeZone($time = null, $time_zone = null)
+    {
+        $from_time = $time
+            ? \Carbon::parse($time, $time_zone ?? auth()->user()->time_zone)
+            : now($time_zone ?? auth()->user()->time_zone ?? 'UTC');
+        return $from_time->tz('UTC');
     }
 
 }

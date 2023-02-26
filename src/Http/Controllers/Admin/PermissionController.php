@@ -5,8 +5,8 @@ namespace Vxize\Lavx\Http\Controllers\Admin;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
+use Vxize\Lavx\Http\Controllers\Admin\UserController as AdminUser;
 use Vxize\Lavx\Http\Controllers\ResourceController;
-use App\Http\Controllers\Admin\UserController as AdminUser;
 
 class PermissionController extends ResourceController
 {
@@ -17,33 +17,23 @@ class PermissionController extends ResourceController
         ],
         $path = 'admin.permissions',
         $name = 'lavx::user.permission',
-        $model = 'Spatie\\Permission\\Models\\Permission',
-        $paginate = 7
-        ;
+        $model = 'Spatie\\Permission\\Models\\Permission'
+    ;
 
     public function columns($type = 'index')
     {
-        $common = [
-            'name' => 'lavx::sys.name',
-        ];
         switch ($type) {
-            case 'show':
-                return $common;
-                break;
-            case 'download':
-                return $common;
-                break;
-            case 'index':
-                return $common;
-                break;
             case 'extra':
                 return [
+                    'description' => 'lavx::sys.description',
                     'role' => 'lavx::user.role',
                     'user' => 'lavx::user.user',
                 ];
                 break;
             default:
-                return [];
+                return [
+                    'name' => 'lavx::sys.name',
+                ];
                 break;
         }
     }
@@ -51,17 +41,17 @@ class PermissionController extends ResourceController
     public function search(Request $request)
     {
         $search = $request->input('search', null);
-        if ($search) {
-            return Permission::where('name', 'LIKE', '%'.$search.'%')
-                    ->orderBy('name');
-        }
-        return Permission::orderBy('name');
+        return Permission::orderBy('name')
+            ->when($search, function ($query, $search) {
+                return $query->where('name', 'LIKE', '%'.$search.'%');
+            });
     }
 
     public function extraTable($data)
     {
         $result = [];
         foreach ($data as $num => $row) {
+            $result[$num]['description'] = __('permission.'.$row->name);
             $result[$num]['role'] = [
                 'type' => 'button',
                 'icon' => 'user-tag',

@@ -1,5 +1,6 @@
 @props([
     'title' => '',
+    'titleWidth' => 'md:w-4/12',
     'width' => 'max-w-7xl',
     'margin' => 'mx-auto mt-6',
     'path' => '',
@@ -20,6 +21,15 @@
     'paginator' => true,
     'actionColumn' => '',
     'return' => '',
+    'routeKeyName' => 'id',
+    'searchable' => '',
+    'filter' => '',
+    'filterData' => [],
+    'noRecordMessage' => 'lavx::sys.no_record',
+    'aboveTable' => '',
+    'aboveTableData' => [],
+    'belowTable' => '',
+    'belowTableData' => [],
 ])
 @php
     if ($download) {
@@ -34,14 +44,15 @@
 @endphp
 <x-lavx::layout.page margin="{{ $margin }}" width="{{ $width }}">
     <x-lavx::flex class="items-center">
-        <div class="w-full md:w-4/12">
+        <div class="w-full {{ $titleWidth }}">
             <x-lavx::h1 text="{{ $title }}" />
         </div>
         @if ($search)
             <div class="w-full md:w-5/12 px-8">
                 <x-lavx::form.search
-                    action="{{ route($path.'.index') }}"
+                    action="{{ route($path.'.index', request()->query()) }}"
                     reset="{{ route($path.'.index') }}"
+                    searchable="{{ $searchable }}"
                 />
             </div>
         @endif
@@ -70,6 +81,8 @@
         @endif
     </x-lavx::flex>
 
+    @includeIf($filter, $filterData)
+
     @if ($success_message = session('success'))
         <x-lavx::alert color="green" text="{{ $success_message }}" />
     @endif
@@ -86,6 +99,7 @@
         />
     @endif
 
+    @includeIf($aboveTable, $aboveTableData)
     <x-lavx::table
         :table="$table"
         :extraTable="$extraTable"
@@ -101,6 +115,9 @@
         :textSize="$textSize"
         :paginator="$paginator"
         :actionColumn="$actionColumn"
+        :routeKeyName="$routeKeyName"
+        :noRecordMessage="$noRecordMessage"
     />
+    @includeIf($belowTable, $belowTableData)
     {{ $slot ?? '' }}
 </x-lavx::layout.page>

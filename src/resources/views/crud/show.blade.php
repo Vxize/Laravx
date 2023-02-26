@@ -8,14 +8,21 @@
     :record=" $record ?? [] "
     :columns=" $columns ?? [] "
     :rawColumns=" $raw_columns ?? [] "
+    :hideColumns=" $hide_columns ?? [] "
     alert="{{ $alert ?? '' }}"
     alertColor="{{ $alert_color ?? 'blue' }}"
+    alertEscaped="{{ $alert_escaped ?? false }}"
     edit="{{ $edit ?? true }}"
     editRoute="{{ $edit_route ?? '' }}"
+    editText="{{ $edit_text ?? '' }}"
     delete="{{ $delete ?? true}}"
     deleteRoute="{{ $delete_route ?? '' }}"
     routeKeyName="{{ $route_key_name ?? 'id' }}"
     textSize="{{ $textSize ?? 'lg:text-lg md:text-base text-sm' }}"
+    aboveTable="{{ $above_table ?? '' }}"
+    :aboveTableData=" $above_table_data ?? [] "
+    belowTable="{{ $below_table ?? '' }}"
+    :belowTableData=" $below_table_data ?? [] "
 >
     {{ $slot ?? '' }}
 </x-lavx::crud.show>

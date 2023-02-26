@@ -4,43 +4,23 @@ namespace Vxize\Lavx\Http\Controllers\Admin;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-
+use Spatie\Activitylog\Models\Activity;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Vxize\Lavx\Http\Controllers\ResourceController;
 
 class UserController extends ResourceController
 {
-    protected 
-        $rules = [
-            // 'name' => 'required|string|max:255',
-        ],
+    protected
         $path = 'admin.users',
         $name = 'lavx::user.user',
-        $model = 'App\\Models\\User',
-        $paginate = 7
+        $model = 'App\\Models\\User'
     ;
 
     public function columns($type = 'index')
     {
-        $full = [
-            'profile.cn_name' => 'lavx::profile.cn_name',
-            'profile.first_name' => 'lavx::profile.first_name',
-            'profile.last_name' => 'lavx::profile.last_name',
-            'email' => 'lavx::user.email',
-            'profile.phone' => 'lavx::profile.phone',
-            'profile.address' => 'lavx::profile.address',
-            'profile.city' => 'lavx::profile.city',
-            'profile.state' => 'lavx::profile.state',
-            'profile.zipcode' => 'lavx::profile.zipcode',
-        ];
         switch ($type) {
-            case 'show':
-                return $full;
-                break;
-            case 'download':
-                return $full;
-                break;
+            case 'search':
             case 'index':
                 return [
                     'profile.cn_name' => 'lavx::profile.cn_name',
@@ -52,9 +32,12 @@ class UserController extends ResourceController
                 break;
             case 'extra':
                 $extra = [
-                    'profile' => 'lavx::vx.profile',
+                    'profile' => 'lavx::sys.profile',
                 ];
                 $user = auth()->user();
+                if ($user->can('log')) {
+                    $extra['log'] = 'lavx::sys.log';
+                }
                 if ($user->can('permission')) {
                     $extra['permission'] = 'lavx::user.permission';
                 }
@@ -64,7 +47,17 @@ class UserController extends ResourceController
                 return $extra;
                 break;
             default:
-                return [];
+                return [
+                    'profile.cn_name' => 'lavx::profile.cn_name',
+                    'profile.first_name' => 'lavx::profile.first_name',
+                    'profile.last_name' => 'lavx::profile.last_name',
+                    'email' => 'lavx::user.email',
+                    'profile.phone' => 'lavx::profile.phone',
+                    'profile.address' => 'lavx::profile.address',
+                    'profile.city' => 'lavx::profile.city',
+                    'profile.state' => 'lavx::profile.state',
+                    'profile.zipcode' => 'lavx::profile.zipcode',
+                ];
                 break;
         }
     }
@@ -72,17 +65,16 @@ class UserController extends ResourceController
     public function search(Request $request)
     {
         $search = $request->input('search', null);
-        if ($search) {
-            return User::with('profile')
-                ->where('email', 'LIKE', '%'.$search.'%')
-                ->orWhereHas('profile', function($query) use ($search) {
-                    $query->Where('cn_name', 'LIKE', '%'.$search.'%')
-                    ->orWhere('first_name', 'LIKE', '%'.$search.'%')
-                    ->orWhere('last_name', 'LIKE', '%'.$search.'%')
-                    ->orWhere('phone', 'LIKE', '%'.$search.'%');
-                })->latest('created_at');
-        }
-        return User::with('profile')->latest('created_at');
+        return User::with('profile')->latest()
+            ->when($search, function ($query, $search) {
+                return $query->where('email', 'LIKE', '%'.$search.'%')
+                    ->orWhereHas('profile', function($query) use ($search) {
+                        $query->Where('cn_name', 'LIKE', '%'.$search.'%')
+                        ->orWhere('first_name', 'LIKE', '%'.$search.'%')
+                        ->orWhere('last_name', 'LIKE', '%'.$search.'%')
+                        ->orWhere('phone', 'LIKE', '%'.$search.'%');
+                    });
+            });
     }
     
     public function extraTable($data)
@@ -96,6 +88,12 @@ class UserController extends ResourceController
                     'icon' => 'id-card',
                     'link' => route('admin.users.show', $user_id),
                     'color' => 'blue',
+                ];
+                $result[$num]['log'] = [
+                    'type' => 'button',
+                    'icon' => 'clock-rotate-left',
+                    'link' => route('admin.logs.index', ['user_id' => $user_id]),
+                    'color' => 'purple',
                 ];
                 $result[$num]['permission'] = [
                     'type' => 'button',
@@ -133,6 +131,12 @@ class UserController extends ResourceController
     {
         $roles = array_keys($request->except('_token'));
         $user->syncRoles($roles);
+        activity('user')->event('UserRoleAssigned')->on($user)
+            ->by($request->user())
+            ->withProperties([
+                'roles' => $roles,
+                'ip' => $request->ip(),
+            ])->log('Roles assigned to :subject.email by :causer.email (:properties.ip)');
         return redirect()->route('admin.users.index')
             ->with('success', __('lavx::form.save_success'));
     }
@@ -159,6 +163,12 @@ class UserController extends ResourceController
     {
         $permissions = array_keys($request->except('_token'));
         $user->syncPermissions($permissions);
+        activity('user')->event('UserPermissionAssigned')->on($user)
+            ->by($request->user())
+            ->withProperties([
+                'permissions' => $permissions,
+                'ip' => $request->ip(),
+            ])->log('Permissions assigned to :subject.email by :causer.email (:properties.ip)');
         return redirect()->route('admin.users.index')
             ->with('success', __('lavx::form.save_success'));
     }
@@ -173,74 +183,13 @@ class UserController extends ResourceController
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
     public function show(User $user)
     {
-        // $record = $user->profile;
-        // $record->email = $user->email;
         return $this->showRecord($user, [
             'delete' => false,
-            'edit_route' => 'admin.profiles.edit',
+            'edit' => false,
+            // 'edit_route' => 'admin.profiles.edit',
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(User $user)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, User $user)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(User $user)
-    {
-        //
-    }
 }
