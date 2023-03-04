@@ -24,11 +24,15 @@ class RoleController extends ResourceController
     public function columns($type = 'index')
     {
         switch ($type) {
+            case 'action':
+                return [
+                    'permission' => 'lavx::user.permission',
+                    'user' => 'lavx::user.user',
+                ];
+                break;
             case 'extra':
                 return [
                     'description' => 'lavx::sys.description',
-                    'permission' => 'lavx::user.permission',
-                    'user' => 'lavx::user.user',
                 ];
                 break;
             default:

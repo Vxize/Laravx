@@ -5,12 +5,13 @@
     'margin' => 'mx-auto mt-6',
     'path' => '',
     'table' => [],
-    'extraTable' => [],
     'columns' => [],
     'rawColumns' => [],
     'extraColumns' => [],
-    'actionColumnText' => [],
-    'actionColumnIcon' => [],
+    'extraTable' => [],
+    'actionColumns' => [],
+    'actionColumnsText' => [],
+    'actionColumnsIcon' => [],
     'add' => true,
     'download' => true,
     'search' => true,
@@ -19,7 +20,6 @@
     'delete' => true,
     'textSize' => 'lg:text-lg md:text-base text-sm',
     'paginator' => true,
-    'actionColumn' => '',
     'return' => '',
     'routeKeyName' => 'id',
     'searchable' => '',
@@ -102,19 +102,19 @@
     @includeIf($aboveTable, $aboveTableData)
     <x-lavx::table
         :table="$table"
-        :extraTable="$extraTable"
         :columns="$columns"
         :rawColumns="$rawColumns"
         :extraColumns="$extraColumns"
-        :actionColumnText="$actionColumnText"
-        :actionColumnIcon="$actionColumnIcon"
+        :extraTable="$extraTable"
+        :actionColumns="$actionColumns"
+        :actionColumnsText="$actionColumnsText"
+        :actionColumnsIcon="$actionColumnsIcon"
         :path="$path"
         :view="$view"
         :edit="$edit"
         :delete="$delete"
         :textSize="$textSize"
         :paginator="$paginator"
-        :actionColumn="$actionColumn"
         :routeKeyName="$routeKeyName"
         :noRecordMessage="$noRecordMessage"
     />

@@ -1,36 +1,43 @@
 @props([
     'path' => '',
     'table' => [],
-    'extraTable' => [],
     'columns' => [],
     'rawColumns' => [],
     'extraColumns' => [],
-    'actionColumnText' => [],
-    'actionColumnIcon' => [],
+    'extraTable' => [],
+    'actionColumns' => [],
+    'actionColumnsText' => [],
+    'actionColumnsIcon' => [],
     'view' => true,
     'edit' => true,
     'delete' => true,
     'textSize' => 'lg:text-lg md:text-base text-sm',
     'paginator' => true,
-    'actionColumn' => '',
     'routeKeyName' => 'id',
     'noRecordMessage' => 'lavx::sys.no_record',
-    'above_table' => '',
-    'below_table' => '',
 ])
 @php
     $table_class = 'border-collapse min-w-full table-fixed divide-y divide-gray-300 '.$textSize;
-    $action = $view || $edit || $delete;
-    if ($action && !$actionColumn) {
-        $default_action_column = [];
-        if ($view)  $default_action_column[] = $actionColumnText['view'] ?? __('lavx::sys.view');
-        if ($edit)  $default_action_column[] = $actionColumnText['edit'] ?? __('lavx::sys.edit');
-        if ($delete)  $default_action_column[] = $actionColumnText['delete'] ?? __('lavx::sys.delete');
-        $default_action_column = implode(' | ', $default_action_column);
+    $action = $view || $edit || $delete || ! empty($actionColumns);
+    if ($action) {
+        $action_column_header = [];
+        if ($view) {
+            $action_column_header['view'] = $actionColumnsText['view'] ?? __('lavx::sys.view');
+        }
+        if ($edit) {
+            $action_column_header['edit'] = $actionColumnsText['edit'] ?? __('lavx::sys.edit');
+        }
+        if ($delete) {
+            $action_column_header['delete'] = $actionColumnsText['delete'] ?? __('lavx::sys.delete');
+        }
+        if (! empty($actionColumns)) {
+            foreach ($actionColumns as $key => $value) {
+                $action_column_header[$key] = __($value);
+            }
+        }
+        $action_column_header = implode(' | ', $action_column_header);
     }
 @endphp
-
-{{ $above_table }}
 
 @if ($table->isEmpty())
     <x-lavx::h2 color="text-red-600" text="{{ __($noRecordMessage) }}" />
@@ -39,55 +46,25 @@
         <table class="{{ $table_class }}">
             <thead>
                 <tr class="bg-gray-300 uppercase leading-normal text-left">
+                    @if ($action)
+                        <th class="py-3 px-6 text-center md:sticky left-0 bg-gray-300 border-r">{{ $action_column_header ?? '' }}</th>
+                    @endif
                     @foreach ($columns as $col)
                         <th class="py-3 px-6">{{ __($col) }}</th>
                     @endforeach
                     @foreach ($extraColumns as $add_col)
                         <th class="py-3 px-6">{{ __($add_col) }}</th>
                     @endforeach
-                    @if ($action)
-                        <th class="py-3 px-6 w-56 text-center">{{ $actionColumn ?: ($default_action_column ?? '') }}</th>
-                    @endif    
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-300">
                 @foreach ($table as $num => $row)
                     <tr class="hover:bg-gray-200 whitespace-nowrap {{ $loop->even ? 'bg-gray-100' : '' }}">
-                        @foreach ($columns as $key => $col)
-                            <td class="py-2 px-6">
-                                @if (!empty($rawColumns) && in_array($key, $rawColumns))
-                                    {!! Arr::get($row, $key, '') !!}
-                                @else
-                                    {{ Arr::get($row, $key, '') }}
-                                @endif
-                            </td>
-                        @endforeach
-                        @foreach ($extraColumns as $add_key => $add_col)
-                            @if (isset($extraTable[$num][$add_key]['type'])
-                                && $extraTable[$num][$add_key]['type'] === 'button'
-                            )
-                                <td class="py-2 px-6">
-                                    <x-lavx::button
-                                        icon="{{ $extraTable[$num][$add_key]['icon'] ?? 'info-circle' }}"
-                                        color="{{ $extraTable[$num][$add_key]['color'] ?? 'blue' }}"
-                                        display="inline-block"
-                                        text=""
-                                        link="{{ $extraTable[$num][$add_key]['link'] ?? '' }}"
-                                        padding="p-2"
-                                        margin="my-0 mx-auto"
-                                        width="w-12"
-                                        textSize='lg:text-lg md:text-base text-sm'
-                                    />
-                                </td>
-                            @else
-                                <td class="py-2 px-6">{{ $extraTable[$num][$add_key] ?? '' }}</td>
-                            @endif
-                        @endforeach
-                        @if ($action)
-                            <td class="py-2 px-6 text-center">
+                    @if ($action)
+                            <td class="py-2 px-6 text-center md:sticky left-0 bg-white hover:bg-gray-200 border-r">
                                 @if ($view)
                                     <x-lavx::button
-                                        icon="{{ $actionColumnIcon['view'] ?? 'circle-info' }}"
+                                        icon="{{ $actionColumnsIcon['view'] ?? 'circle-info' }}"
                                         color="blue"
                                         display="inline-block"
                                         text=""
@@ -100,7 +77,7 @@
                                 @endif
                                 @if ($edit)
                                     <x-lavx::button
-                                        icon="{{ $actionColumnIcon['edit'] ?? 'pen-to-square' }}"
+                                        icon="{{ $actionColumnsIcon['edit'] ?? 'pen-to-square' }}"
                                         color="purple"
                                         display="inline-block"
                                         text=""
@@ -114,7 +91,7 @@
                                 @if ($delete)
                                     <span x-data="{ delete_{{Arr::get($row, $routeKeyName)}} : false }">
                                         <x-lavx::button
-                                            icon="{{ $actionColumnIcon['delete'] ?? 'trash-can' }}"
+                                            icon="{{ $actionColumnsIcon['delete'] ?? 'trash-can' }}"
                                             color="red"
                                             display="inline-block"
                                             text=""
@@ -162,8 +139,37 @@
                                         </div>
                                     </span>
                                 @endif
+                                @foreach ($actionColumns as $add_key => $add_col)
+                                    @if (isset($extraTable[$num][$add_key]['type'])
+                                        && $extraTable[$num][$add_key]['type'] === 'button'
+                                    )
+                                        <x-lavx::button
+                                            icon="{{ $extraTable[$num][$add_key]['icon'] ?? 'info-circle' }}"
+                                            color="{{ $extraTable[$num][$add_key]['color'] ?? 'blue' }}"
+                                            display="inline-block"
+                                            text=""
+                                            link="{{ $extraTable[$num][$add_key]['link'] ?? '' }}"
+                                            padding="p-2"
+                                            margin="my-0 mx-auto"
+                                            width="w-12"
+                                            textSize='lg:text-lg md:text-base text-sm'
+                                        />
+                                    @endif
+                                @endforeach
                             </td>
                         @endif
+                        @foreach ($columns as $key => $col)
+                            <td class="py-2 px-6">
+                                @if (!empty($rawColumns) && in_array($key, $rawColumns))
+                                    {!! Arr::get($row, $key, '') !!}
+                                @else
+                                    {{ Arr::get($row, $key, '') }}
+                                @endif
+                            </td>
+                        @endforeach
+                        @foreach ($extraColumns as $add_key => $add_col)
+                            <td class="py-2 px-6">{{ $extraTable[$num][$add_key] ?? '' }}</td>
+                        @endforeach
                     </tr>
                 @endforeach
             </tbody>
@@ -173,4 +179,3 @@
         <div class="p-3">{!! $table->withQueryString()->onEachSide(1)->links('lavx::paginator') ?? ''  !!}</div>
     @endif
 @endif
-{{ $below_table }}

@@ -112,6 +112,7 @@ class ResourceController extends Controller
             'route_key_name' => $this->route_key_name,
             'searchable' => implode(', ', array_map(fn($value) => __($value), $this->columns('search'))),
             'columns' => $parm['table_columns'] ?? $this->columns('index'),
+            'action_columns' => $parm['action_columns'] ?? $this->columns('action') ?? [],
             'extra_columns' => $parm['extra_columns'] ?? $this->columns('extra') ?? [],
             'extra_table' => $parm['extra_table'] ?? $this->extraTable($table),
         ], $parm));

@@ -4,10 +4,11 @@ namespace Vxize\Lavx\Http\Controllers\Admin;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Spatie\Activitylog\Models\Activity;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Vxize\Lavx\Http\Controllers\ResourceController;
+use Vxize\Lavx\Events\UserPermissionAssigned;
+use Vxize\Lavx\Events\UserRoleAssigned;
 
 class UserController extends ResourceController
 {
@@ -30,21 +31,27 @@ class UserController extends ResourceController
                     'profile.phone' => 'lavx::profile.phone',
                 ];
                 break;
-            case 'extra':
-                $extra = [
+            case 'action':
+                $action = [
                     'profile' => 'lavx::sys.profile',
                 ];
                 $user = auth()->user();
                 if ($user->can('log')) {
-                    $extra['log'] = 'lavx::sys.log';
+                    $action['log'] = 'lavx::sys.log';
                 }
                 if ($user->can('permission')) {
-                    $extra['permission'] = 'lavx::user.permission';
+                    $action['permission'] = 'lavx::user.permission';
                 }
                 if ($user->can('role')) {
-                    $extra['role'] = 'lavx::user.role';
+                    $action['role'] = 'lavx::user.role';
                 }
-                return $extra;
+                if ($user->can('impersonate')) {
+                    $action['impersonate'] = 'lavx::user.impersonate';
+                }
+                return $action;
+                break;
+            case 'extra':
+                return [];
                 break;
             default:
                 return [
@@ -107,6 +114,12 @@ class UserController extends ResourceController
                     'link' => route('admin.users.roles', $user_id),
                     'color' => 'yellow',
                 ];
+                $result[$num]['impersonate'] = [
+                    'type' => 'button',
+                    'icon' => 'rotate',
+                    'link' => route('impersonate', $user_id),
+                    'color' => 'red',
+                ];
             }
         }
         return $result;
@@ -131,12 +144,12 @@ class UserController extends ResourceController
     {
         $roles = array_keys($request->except('_token'));
         $user->syncRoles($roles);
-        activity('user')->event('UserRoleAssigned')->on($user)
-            ->by($request->user())
-            ->withProperties([
-                'roles' => $roles,
-                'ip' => $request->ip(),
-            ])->log('Roles assigned to :subject.email by :causer.email (:properties.ip)');
+        event(new UserRoleAssigned(
+            assigner: $request->user(),
+            assignee: $user,
+            roles: $roles,
+            ip: $request->ip()
+        ));
         return redirect()->route('admin.users.index')
             ->with('success', __('lavx::form.save_success'));
     }
@@ -163,12 +176,12 @@ class UserController extends ResourceController
     {
         $permissions = array_keys($request->except('_token'));
         $user->syncPermissions($permissions);
-        activity('user')->event('UserPermissionAssigned')->on($user)
-            ->by($request->user())
-            ->withProperties([
-                'permissions' => $permissions,
-                'ip' => $request->ip(),
-            ])->log('Permissions assigned to :subject.email by :causer.email (:properties.ip)');
+        event(new UserPermissionAssigned(
+            assigner: $request->user(),
+            assignee: $user,
+            permissions: $permissions,
+            ip: $request->ip()
+        ));
         return redirect()->route('admin.users.index')
             ->with('success', __('lavx::form.save_success'));
     }

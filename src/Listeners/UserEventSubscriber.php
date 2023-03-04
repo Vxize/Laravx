@@ -28,6 +28,22 @@ class UserEventSubscriber
             ])->log('Email verified: :causer.email (:properties.ip)');
     }
 
+    public function logLeaveImpersonation($event)
+    {
+        activity('user')->event('UserLeaveImpersonation')
+            ->on($event->impersonated)->by($event->impersonator)
+            ->withProperties(['ip' => request()->ip()])
+            ->log(':causer.email left impersonation of :subject.email (:properties.ip)');
+    }
+
+    public function logTakeImpersonation($event)
+    {
+        activity('user')->event('UserTakeImpersonation')
+            ->on($event->impersonated)->by($event->impersonator)
+            ->withProperties(['ip' => request()->ip()])
+            ->log(':causer.email took impersonation of :subject.email (:properties.ip)');
+    }
+
     public function logLockout($event)
     {
         $email = strtolower($event->request->email);
@@ -107,6 +123,16 @@ class UserEventSubscriber
             ->log('Password reset: :causer.email (:properties.ip)');
     }
 
+    public function logPermissionAssigned($event)
+    {
+        activity('user')->event('UserPermissionAssigned')
+            ->on($event->assignee)->by($event->assigner)
+            ->withProperties([
+                'ip' => $event->ip,
+                'permissions' => $event->permissions
+            ])->log('Permissions assigned to :subject.email by :causer.email (:properties.ip)');
+    }
+
     public function logRegistered($event)
     {
         if ($event->user instanceof MustVerifyEmail
@@ -119,10 +145,22 @@ class UserEventSubscriber
             ->log('Registered: :causer.email (:properties.ip)');
     }
 
+    public function logRoleAssigned($event)
+    {
+        activity('user')->event('UserRoleAssigned')
+            ->on($event->assignee)->by($event->assigner)
+            ->withProperties([
+                'ip' => $event->ip,
+                'roles' => $event->roles
+            ])->log('Roles assigned to :subject.email by :causer.email (:properties.ip)');
+    }
+
     public function subscribe($events)
     {
         return [
             'Illuminate\Auth\Events\Lockout' => 'logLockout',
+            'Lab404\Impersonate\Events\LeaveImpersonation' => 'logLeaveImpersonation',
+            'Lab404\Impersonate\Events\TakeImpersonation' => 'logTakeImpersonation',
             'Vxize\Lavx\Events\UserEmailChanged' => 'logEmailChange',
             'Vxize\Lavx\Events\UserEmailVerified' => 'logEmailVerified',
             'Vxize\Lavx\Events\UserLogin' => 'logLogin',
@@ -132,7 +170,9 @@ class UserEventSubscriber
             'Vxize\Lavx\Events\UserPasswordConfirmed' => 'logPasswordConfirmed',
             'Vxize\Lavx\Events\UserPasswordConfirmFailed' => 'logPasswordConfirmFailed',
             'Vxize\Lavx\Events\UserPasswordReset' => 'logPasswordReset',
+            'Vxize\Lavx\Events\UserPermissionAssigned' => 'logPermissionAssigned',
             'Vxize\Lavx\Events\UserRegistered' => 'logRegistered',
+            'Vxize\Lavx\Events\UserRoleAssigned' => 'logRoleAssigned',
         ];
     }
 }

@@ -13,6 +13,8 @@ return [
     'email' => '電子郵箱',
     'email_verified' => '您的電子郵箱已經成功驗證',
     'forget_password' => '忘記密碼',
+    'impersonate' => '化身',
+    'impersonating_message' => '您現在是以:name的身份登入進行操作',
     'keep_login' => '保持登入',
     'login' => '登入',
     'login_failed' => '登入失敗',
