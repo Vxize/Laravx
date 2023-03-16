@@ -32,7 +32,7 @@ class SignUpController extends ResourceController
     {
         $request->validate([
             'name' => 'string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|string|email:filter|max:255|unique:users',
             'password' => ['required', 'confirmed', Password::min(8)],
         ]);
         $user = User::create([

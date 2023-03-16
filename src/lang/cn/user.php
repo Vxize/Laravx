@@ -18,6 +18,7 @@ return [
     'keep_login' => '保持登入',
     'login' => '登入',
     'login_failed' => '登入失敗',
+    'login_info' => '登入郵箱：:email ；登入密碼： :password',
     'login_not_match' => '您輸入的登入資料不正確',
     'login_throttle' => '登入失敗次數過多！請在 :seconds 秒後重試',
     'login_with_email_password' => '請使用您註冊的郵箱和密碼登入',

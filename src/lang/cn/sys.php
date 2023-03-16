@@ -86,6 +86,7 @@ return [
     'system' => '系統',
     'time' => '時間',
     'time_zone' => '時區',
+    'unchanged' => '不變',
     'updated_at' => '修改時間',
     'upload' => '上傳',
     'view' => '查看',

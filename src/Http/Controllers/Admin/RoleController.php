@@ -35,6 +35,10 @@ class RoleController extends ResourceController
                     'description' => 'lavx::sys.description',
                 ];
                 break;
+            case 'store':
+            case 'update':
+                return ['name'];
+                break;
             default:
                 return [
                     'name' => 'lavx::sys.name',
@@ -112,7 +116,7 @@ class RoleController extends ResourceController
     {
         $permissions = array_keys($request->except('_token'));
         $role->syncPermissions($permissions);
-        return redirect()->route('admin.roles.index')
+        return to_route('admin.roles.index')
             ->with('success', __('lavx::form.save_success'));
     }
 

@@ -47,15 +47,18 @@ class LavxServiceProvider extends ServiceProvider
 
         // The super admin can skip any $user->can()
         Gate::before(function ($user, $ability) {
-            $super_admin_user_id = config('lavx.super_admin_user_id');
-            if ($super_admin_user_id && $user->id == $super_admin_user_id) {
+            $super_admin_user_id = intval(config('lavx.super_admin_user_id'));
+            if ($super_admin_user_id && $user->id === $super_admin_user_id) {
                 return true;
             }
             return $user->hasRole('super_admin') ? true : null;
         });
 
-        // prevent lazy loading to find N+1 problem in non-production server
-        Model::preventLazyLoading(! app()->isProduction());
+        // shouldBeStrict includes:
+        // 1. preventLazyLoading
+        // 2. preventSilentlyDiscardingAttributes
+        // 3. preventAccessingMissingAttributes
+        Model::shouldBeStrict(! $this->app->isProduction());
 
         // customize verification email
         VerifyEmail::toMailUsing(function ($notifiable, $url) {

@@ -13,6 +13,7 @@
     alertColor="{{ $alert_color ?? 'blue' }}"
     alertEscaped="{{ $alert_escaped ?? false }}"
     edit="{{ $edit ?? true }}"
+    editId="{{ $edit_id ?? null }}"
     editRoute="{{ $edit_route ?? '' }}"
     editText="{{ $edit_text ?? '' }}"
     delete="{{ $delete ?? true}}"

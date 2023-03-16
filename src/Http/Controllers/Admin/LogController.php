@@ -2,6 +2,7 @@
 
 namespace Vxize\Lavx\Http\Controllers\Admin;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Activitylog\Models\Activity;
 use Vxize\Lavx\Http\Controllers\ResourceController;
@@ -65,12 +66,16 @@ class LogController extends ResourceController
                 $query->where('log_name', 'LIKE', '%'.$log_name.'%');
             })->when($user_id, function ($query, $user_id) {
                 $query->where(function ($query) use ($user_id) {
+                    $user = User::find($user_id);
                     $query->where(function ($query) use ($user_id) {
                         $query->where('causer_type', 'App\Models\User')
                             ->where('causer_id', $user_id);
                     })->orWhere(function ($query) use ($user_id) {
                         $query->where('subject_type', 'App\Models\User')
                             ->where('subject_id', $user_id);
+                    })->orWhere(function ($query) use ($user) {
+                        $query->where('subject_type', 'App\Models\Profile')
+                            ->where('subject_id', $user->profile->id);
                     });
                 });
             })->when($search, function ($query, $search) {

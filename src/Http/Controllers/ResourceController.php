@@ -76,12 +76,18 @@ class ResourceController extends Controller
             case 'search':
                 return $common;
                 break;
-            case 'update':  // columns to watch for update
+            case 'store':  // columns for store
                 return $common;
+                break;
+            case 'update':  // columns for update
+                return $common;
+                break;
+            case 'action':  // buttons in action column
+                return [];
                 break;
             case 'extra':
                 return [];
-                break;               
+                break;
             default:
                 return [];
                 break;
@@ -149,7 +155,10 @@ class ResourceController extends Controller
     // validate and insert new record to DB, return id of new inserted record
     public function insertOneRecord($data = [])
     {
-        $validator = validator($data, array_merge($this->rules, $this->insert_rules));
+        $validator = validator(
+            $data,
+            array_merge($this->rules, $this->insert_rules)
+        );
         if ($validator->fails()) {
             $validator->validated();
             session([
@@ -162,17 +171,19 @@ class ResourceController extends Controller
 
     public function storeRecord(Request $request, $data = [])
     {
-        $record = $this->insertOneRecord(array_merge($request->all(), $data));
+        $record = $this->insertOneRecord(
+            array_merge($request->only($this->columns('store')), $data)
+        );
         if ($record) {
             $result = 'success';
-            $message = $this->messages['store']['success'];
+            $message = $request->success_message ?? $this->messages['store']['success'];
             $this->onStoreSuccess($request, $record);
         } else {
             $result = 'error';
-            $message = $this->messages['store']['error'];
+            $message = $request->error_message ?? $this->messages['store']['error'];
             $this->onStoreFail($request);
         }
-        return redirect()->route(
+        return to_route(
             $request->_redirect ?? $this->redirects['store'] ?? $this->path.'.index',
             $record ?? null
         )->with($result, __($message));
@@ -204,7 +215,10 @@ class ResourceController extends Controller
     // validate and update an old record, return number of affected rows
     public function updateOneRecord($record, $data = [])
     {
-        $validator = validator($data, array_merge($this->rules, $this->update_rules));
+        $validator = validator(
+            $data,
+            array_merge($this->rules, $this->update_rules)
+        );
         if ($validator->fails()) {            
             $validator->validated();
             session([
@@ -249,17 +263,20 @@ class ResourceController extends Controller
     {
         $old_record = $record->replicate();
         //return rows affected by the update
-        $rows = $this->updateOneRecord($record, array_merge($request->all(), $data)); 
+        $rows = $this->updateOneRecord(
+            $record,
+            array_merge($request->only($this->columns('update')), $data)
+        );
         if ($rows) {
             $result = 'success';
-            $message = $this->messages['update']['success'];
+            $message = $request->success_message ?? $this->messages['update']['success'];
             $this->onUpdateSuccess($request, $record, $old_record);
         } else {
             $result = 'error';
-            $message = $this->messages['update']['error'];
+            $message = $request->error_message ?? $this->messages['update']['error'];
             $this->onUpdateFail($request, $record);
         }
-        return redirect()->route(
+        return to_route(
             $request->_redirect ?? $this->redirects['update'] ?? $this->path.'.index',
             $record ?? null
         )->with($result, __($message));
@@ -271,7 +288,7 @@ class ResourceController extends Controller
         
     }
 
-    // things to do on failed update
+    // things to do on failed destroy
     public function onDestroyFail($record)
     {
         
@@ -290,7 +307,7 @@ class ResourceController extends Controller
             $message = $this->messages['destroy']['error'];
             $this->onDestroyFail($deleted_record);
         }
-        return redirect()->route(
+        return to_route(
             $this->redirects['destroy'] ?? $this->path.'.index',
             $deleted_record ?? null
         )->with($result, __($message));

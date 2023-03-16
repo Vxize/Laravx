@@ -6,6 +6,7 @@
     'showReturn' => true,
     'return' => '',
     'action' => '',
+    'actionParameter' => true,
     'form' => '',
     'aboveForm' => '',
     'aboveFormData' => [],
@@ -34,7 +35,7 @@
     @endif
     @includeIf($aboveForm, $aboveFormData ?: ['record' => $record])
     <x-lavx::form
-        action="{{ route( $action ?: $path.'.update', $record->{$routeKeyName}) }}"
+        action="{{ route( $action ?: $path.'.update', $actionParameter ? $record->{$routeKeyName} : '') }}"
         type="update"
         submitText="{{ $submitText }}"
         submitIcon="{{ $submitIcon }}"

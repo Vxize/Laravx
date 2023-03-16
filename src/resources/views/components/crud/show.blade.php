@@ -13,6 +13,7 @@
     'alertColor' => 'blue',
     'alertEscaped' => false,
     'edit' => true,
+    'editId' => null,
     'editRoute' => '',
     'editText' => '',
     'delete' => true,
@@ -51,7 +52,7 @@
 
     @if ($edit)
         <x-lavx::button
-            link="{{ route($editRoute ?: $path.'.edit', Arr::get($record, $routeKeyName)) }}"
+            link="{{ route($editRoute ?: $path.'.edit', $editId ?: Arr::get($record, $routeKeyName)) }}"
             icon="pen-to-square"
             text="{{ __($editText ?: 'lavx::sys.edit') }}"
             width="w-1/2"

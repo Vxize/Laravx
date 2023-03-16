@@ -7,6 +7,7 @@
     showReturn="{{ $show_return ?? true }}"
     return="{{ $return ?? '' }}"
     action="{{ $action ?? '' }}"
+    actionParameter="{{ $action_parameter ?? true }}"
     form="{{ $form ?? '' }}"
     aboveForm="{{ $above_form ?? '' }}"
     :aboveFormData=" $above_form_data ?? [] "

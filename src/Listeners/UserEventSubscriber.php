@@ -3,6 +3,7 @@
 namespace Vxize\Lavx\Listeners;
 
 use App\Models\User;
+use App\Models\Profile;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -10,6 +11,14 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 class UserEventSubscriber
 {
     
+    public function createProfile($event)
+    {
+        Profile::create([
+            'user_id' => $event->user->id,
+            'uid' => \Lavx::randomString(),
+        ]);
+    }
+
     public function logEmailChange($event)
     {
         activity('user')->event('UserEmailChanged')
@@ -52,7 +61,7 @@ class UserEventSubscriber
             ? activity('user')->event('Lockout')->by($user)
                 ->withProperties(['ip' => $event->request->ip()])
                 ->log('Lockout: :causer.email (:properties.ip)')
-            : activity('lockout')->event('Lockout')
+            : activity('lockout')->event('WrongUserLockout')
                 ->withProperties([
                     'ip' => $event->request->ip(),
                     'email' => $email,
@@ -76,12 +85,34 @@ class UserEventSubscriber
             ? activity('user')->event('LoginFailed')->by($user)
                 ->withProperties(['ip' => $event->request->ip()])
                 ->log('Login failed: :causer.email (:properties.ip)')
-            : activity('login')->event('LoginFailed')
+            : activity('login')->event('WrongUserLoginFailed')
                 ->withProperties([
                     'ip' => $event->request->ip(),
                     'email' => $email,
                 ])->log('Login failed: :properties.email (:properties.ip)')
             ;
+    }
+
+    public function logLoginUpdated($event)
+    {
+        $user = User::find($event->new_record->id);
+        $email = $event->request->missing('email')
+            ? 'Same'
+            : [
+                'new' => $event->new_record->email,
+                'old' => $event->old_record->email,
+            ];
+        $password = $event->request->filled('reset_password') ? 'Reset' : 'Same';
+        return activity('user')
+            ->event('LoginUpdated')
+            ->on($user)
+            ->by($event->request->user())
+            ->withProperties([
+                'ip' => $event->request->ip(),
+                'email' => $email,
+                'password' => $password,
+            ])
+            ->log('Login info of :subject.email updated by :causer.email (:properties.ip)');
     }
 
     public function logLogout($event)
@@ -135,11 +166,6 @@ class UserEventSubscriber
 
     public function logRegistered($event)
     {
-        if ($event->user instanceof MustVerifyEmail
-            && ! $event->user->hasVerifiedEmail()
-        ) {
-            $event->user->sendEmailVerificationNotification();
-        }
         activity('user')->event('UserRegistered')->by($event->user)
             ->withProperties(['ip' => $event->ip])
             ->log('Registered: :causer.email (:properties.ip)');
@@ -155,6 +181,15 @@ class UserEventSubscriber
             ])->log('Roles assigned to :subject.email by :causer.email (:properties.ip)');
     }
 
+    public function sendVerificationEmail($event)
+    {
+        if ($event->user instanceof MustVerifyEmail
+            && ! $event->user->hasVerifiedEmail()
+        ) {
+            $event->user->sendEmailVerificationNotification();
+        }
+    }
+
     public function subscribe($events)
     {
         return [
@@ -165,13 +200,18 @@ class UserEventSubscriber
             'Vxize\Lavx\Events\UserEmailVerified' => 'logEmailVerified',
             'Vxize\Lavx\Events\UserLogin' => 'logLogin',
             'Vxize\Lavx\Events\UserLoginFailed' => 'logLoginFailed',
+            'Vxize\Lavx\Events\UserLoginUpdated' => 'logLoginUpdated',
             'Vxize\Lavx\Events\UserLogout' => 'logLogout',
             'Vxize\Lavx\Events\UserPasswordChanged' => 'logPasswordChange',
             'Vxize\Lavx\Events\UserPasswordConfirmed' => 'logPasswordConfirmed',
             'Vxize\Lavx\Events\UserPasswordConfirmFailed' => 'logPasswordConfirmFailed',
             'Vxize\Lavx\Events\UserPasswordReset' => 'logPasswordReset',
             'Vxize\Lavx\Events\UserPermissionAssigned' => 'logPermissionAssigned',
-            'Vxize\Lavx\Events\UserRegistered' => 'logRegistered',
+            'Vxize\Lavx\Events\UserRegistered' => [
+                'createProfile',
+                'sendVerificationEmail',
+                'logRegistered',
+            ],
             'Vxize\Lavx\Events\UserRoleAssigned' => 'logRoleAssigned',
         ];
     }

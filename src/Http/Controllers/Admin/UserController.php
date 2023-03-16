@@ -4,9 +4,11 @@ namespace Vxize\Lavx\Http\Controllers\Admin;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Vxize\Lavx\Http\Controllers\ResourceController;
+use Vxize\Lavx\Events\UserLoginUpdated;
 use Vxize\Lavx\Events\UserPermissionAssigned;
 use Vxize\Lavx\Events\UserRoleAssigned;
 
@@ -15,7 +17,10 @@ class UserController extends ResourceController
     protected
         $path = 'admin.users',
         $name = 'lavx::user.user',
-        $model = 'App\\Models\\User'
+        $model = 'App\\Models\\User',
+        $rules = [
+            'email' => 'sometimes|string|email:filter|max:255|unique:users',
+        ]
     ;
 
     public function columns($type = 'index')
@@ -34,6 +39,7 @@ class UserController extends ResourceController
             case 'action':
                 $action = [
                     'profile' => 'lavx::sys.profile',
+                    'login' => 'lavx::user.login',
                 ];
                 $user = auth()->user();
                 if ($user->can('log')) {
@@ -53,14 +59,20 @@ class UserController extends ResourceController
             case 'extra':
                 return [];
                 break;
+            case 'update':
+                return ['email', 'password', 'email_verified_at'];
+                break;
             default:
                 return [
                     'profile.cn_name' => 'lavx::profile.cn_name',
                     'profile.first_name' => 'lavx::profile.first_name',
                     'profile.last_name' => 'lavx::profile.last_name',
+                    'profile.sex' => 'lavx::profile.sex',
+                    'profile.age' => 'lavx::profile.age',
                     'email' => 'lavx::user.email',
                     'profile.phone' => 'lavx::profile.phone',
                     'profile.address' => 'lavx::profile.address',
+                    'profile.address2' => 'lavx::profile.address2',
                     'profile.city' => 'lavx::profile.city',
                     'profile.state' => 'lavx::profile.state',
                     'profile.zipcode' => 'lavx::profile.zipcode',
@@ -96,6 +108,12 @@ class UserController extends ResourceController
                     'link' => route('admin.users.show', $user_id),
                     'color' => 'blue',
                 ];
+                $result[$num]['login'] = [
+                    'type' => 'button',
+                    'icon' => 'right-to-bracket',
+                    'link' => route('admin.users.login', $user_id),
+                    'color' => 'green',
+                ];
                 $result[$num]['log'] = [
                     'type' => 'button',
                     'icon' => 'clock-rotate-left',
@@ -106,13 +124,13 @@ class UserController extends ResourceController
                     'type' => 'button',
                     'icon' => 'eye',
                     'link' => route('admin.users.permissions', $user_id),
-                    'color' => 'green',
+                    'color' => 'yellow',
                 ];
                 $result[$num]['role'] = [
                     'type' => 'button',
                     'icon' => 'user-tag',
                     'link' => route('admin.users.roles', $user_id),
-                    'color' => 'yellow',
+                    'color' => 'indigo',
                 ];
                 $result[$num]['impersonate'] = [
                     'type' => 'button',
@@ -123,6 +141,53 @@ class UserController extends ResourceController
             }
         }
         return $result;
+    }
+
+    public function editLogin(Request $request, User $user)
+    {
+        return $this->editRecord($user, [
+            'form' => 'lavx::forms.admin.reset_login',
+            'title' => __('lavx::user.login'),
+            'action' => 'admin.users.login',
+            'alert' => $user->profile->full_name,
+        ]);
+    }
+
+    public function updateLogin(Request $request, User $user)
+    {
+        $new_email = strtolower($request->email);
+        if ($new_email === $user->email) {
+            // email unchanged, remove it from request
+            $request->offsetUnset('email');
+        } else {
+            // email changed, reset email verified time
+            $request->merge([
+                'email_verified_at' => null,
+            ]);
+        }
+        if ($request->filled('reset_password')) {
+            $new_password = \Lavx::randomString(8);
+            $request->merge([
+                'password' => Hash::make($new_password),
+                'password_text' => $new_password,
+            ]);
+        } else {
+            $new_password = __('lavx::sys.unchanged');
+        }
+        $request->merge([
+            'success_message' => __('lavx::user.login_info', [
+                'email' => $new_email,
+                'password' => $new_password
+            ]),
+            '_redirect' => 'admin.users.index'
+        ]);
+        return $this->updateRecord($request, $user);
+    }
+
+    // when update user login info is success
+    public function onUpdateSuccess(Request $request, $record, $old_record)
+    {
+        event(new UserLoginUpdated($request, $record, $old_record));
     }
 
     public function getRoles(Request $request, User $user)
@@ -150,7 +215,7 @@ class UserController extends ResourceController
             roles: $roles,
             ip: $request->ip()
         ));
-        return redirect()->route('admin.users.index')
+        return to_route('admin.users.index')
             ->with('success', __('lavx::form.save_success'));
     }
 
@@ -182,7 +247,7 @@ class UserController extends ResourceController
             permissions: $permissions,
             ip: $request->ip()
         ));
-        return redirect()->route('admin.users.index')
+        return to_route('admin.users.index')
             ->with('success', __('lavx::form.save_success'));
     }
 
@@ -200,8 +265,9 @@ class UserController extends ResourceController
     {
         return $this->showRecord($user, [
             'delete' => false,
-            'edit' => false,
-            // 'edit_route' => 'admin.profiles.edit',
+            'edit' => $user->profile->uid,
+            'edit_id' => $user->profile->uid,
+            'edit_route' => 'admin.profiles.edit',
         ]);
     }
 

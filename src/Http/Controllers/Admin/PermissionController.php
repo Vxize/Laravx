@@ -34,6 +34,10 @@ class PermissionController extends ResourceController
                     'description' => 'lavx::sys.description',
                 ];
                 break;
+            case 'store':
+            case 'update':
+                return ['name'];
+                break;
             default:
                 return [
                     'name' => 'lavx::sys.name',

@@ -46,9 +46,9 @@ switch ($color) {
     {{ $align }}
     {{ $color_class }}
 ">
-    @if (isset($escaped) && $escaped)
-        {!! $text ?? $slot !!}
-    @else
+    @if (empty($escaped))
         {{ $text ?? $slot }}
+    @else
+        {!! $text ?? $slot !!}
     @endif
 </div>
