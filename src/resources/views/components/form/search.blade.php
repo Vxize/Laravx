@@ -5,15 +5,14 @@
     'showError' => false,
 ])
 @php
-    $query = request()->query();
-    if (isset($query['search']))  unset($query['search']);
+    $query = Arr::except(request()->query(), ['search', 'page']);
 @endphp
 <x-lavx::form
     action="{{ $action }}"
     showError="{{ $showError }}"
     type="get"
 >
-@if (!empty($query))
+@if (! empty($query))
     @foreach ($query as $name => $value)
         <input type="hidden" name="{{ $name }}" value="{{ $value }}" >
     @endforeach
