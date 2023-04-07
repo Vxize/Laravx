@@ -111,6 +111,7 @@ class UserEventSubscriber
                 'ip' => $event->request->ip(),
                 'email' => $email,
                 'password' => $password,
+                'locked' => $event->request->lock ? 'Yes' : 'No',
             ])
             ->log('Login info of :subject.email updated by :causer.email (:properties.ip)');
     }

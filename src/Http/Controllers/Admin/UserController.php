@@ -22,6 +22,8 @@ class UserController extends ResourceController
             'email' => 'sometimes|string|email:filter|max:255|unique:users',
         ]
     ;
+    // default time for "unlocked_at" column
+    const DEFAULT_UNLOCK_TIME = '2038-01-17 23:59:59';
 
     public function columns($type = 'index')
     {
@@ -60,7 +62,12 @@ class UserController extends ResourceController
                 return [];
                 break;
             case 'update':
-                return ['email', 'password', 'email_verified_at'];
+                return [
+                    'email',
+                    'password',
+                    'email_verified_at',
+                    'unlocked_at'
+                ];
                 break;
             default:
                 return [
@@ -174,10 +181,14 @@ class UserController extends ResourceController
         } else {
             $new_password = __('lavx::sys.unchanged');
         }
+        $unlocked_at = $request->lock ? self::DEFAULT_UNLOCK_TIME : null;
+        $locked = $request->lock ? __('lavx::sys.yes') : __('lavx::sys.no');
         $request->merge([
+            'unlocked_at' => $unlocked_at,
             'success_message' => __('lavx::user.login_info', [
                 'email' => $new_email,
-                'password' => $new_password
+                'password' => $new_password,
+                'locked' => $locked,
             ]),
             '_redirect' => 'admin.users.index'
         ]);
