@@ -46,22 +46,34 @@
         <table class="{{ $table_class }}">
             <thead>
                 <tr class="bg-gray-300 uppercase leading-normal text-left">
-                    @if ($action)
-                        <th class="py-3 px-6 text-center md:sticky left-0 bg-gray-300 border-r">{{ $action_column_header ?? '' }}</th>
-                    @endif
                     @foreach ($columns as $col)
                         <th class="py-3 px-6">{{ __($col) }}</th>
                     @endforeach
                     @foreach ($extraColumns as $add_col)
                         <th class="py-3 px-6">{{ __($add_col) }}</th>
                     @endforeach
+                    @if ($action)
+                        <th class="py-3 px-6 text-center md:sticky right-0 bg-lime-100 border-l">{{ $action_column_header ?? '' }}</th>
+                    @endif
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-300">
                 @foreach ($table as $num => $row)
                     <tr class="hover:bg-gray-200 whitespace-nowrap {{ $loop->even ? 'bg-gray-100' : '' }}">
-                    @if ($action)
-                            <td class="py-2 px-6 text-center md:sticky left-0 bg-white hover:bg-gray-200 border-r">
+                        @foreach ($columns as $key => $col)
+                            <td class="py-2 px-6">
+                                @if (!empty($rawColumns) && in_array($key, $rawColumns))
+                                    {!! Arr::get($row, $key, '') !!}
+                                @else
+                                    {{ Arr::get($row, $key, '') }}
+                                @endif
+                            </td>
+                        @endforeach
+                        @foreach ($extraColumns as $add_key => $add_col)
+                            <td class="py-2 px-6">{{ $extraTable[$num][$add_key] ?? '' }}</td>
+                        @endforeach
+                        @if ($action)
+                            <td class="py-2 px-6 text-center md:sticky right-0 bg-lime-100 hover:bg-gray-200 border-l">
                                 @if ($view)
                                     <x-lavx::button
                                         icon="{{ $actionColumnsIcon['view'] ?? 'circle-info' }}"
@@ -158,18 +170,6 @@
                                 @endforeach
                             </td>
                         @endif
-                        @foreach ($columns as $key => $col)
-                            <td class="py-2 px-6">
-                                @if (!empty($rawColumns) && in_array($key, $rawColumns))
-                                    {!! Arr::get($row, $key, '') !!}
-                                @else
-                                    {{ Arr::get($row, $key, '') }}
-                                @endif
-                            </td>
-                        @endforeach
-                        @foreach ($extraColumns as $add_key => $add_col)
-                            <td class="py-2 px-6">{{ $extraTable[$num][$add_key] ?? '' }}</td>
-                        @endforeach
                     </tr>
                 @endforeach
             </tbody>
