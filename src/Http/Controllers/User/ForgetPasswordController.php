@@ -17,7 +17,7 @@ class ForgetPasswordController extends ResourceController
             'action' => route('password.request'),
             'show_return' => false,
             'title' => __('lavx::user.forget_password'),
-            'submit_icon' => 'key',
+            'submit_icon' => 'fa6-solid:key',
             'submit_text' => 'lavx::user.reset_password',
         ]);
     }

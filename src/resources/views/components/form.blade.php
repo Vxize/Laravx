@@ -6,7 +6,7 @@
     'showError' => true,
     'errorTitle' => 'lavx::form.submit_error',
     'submitText' => 'lavx::sys.save',
-    'submitIcon' => 'save',
+    'submitIcon' => 'fa-solid:save',
     'submitColor' => 'blue',
     'submitWidth' => 'w-full',
     'submitDisabled' => false,

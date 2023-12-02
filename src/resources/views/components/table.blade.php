@@ -76,7 +76,7 @@
                             <td class="py-2 px-6 text-center md:sticky right-0 bg-lime-100 hover:bg-gray-200 border-l">
                                 @if ($view)
                                     <x-lavx::button
-                                        icon="{{ $actionColumnsIcon['view'] ?? 'circle-info' }}"
+                                        icon="{{ $actionColumnsIcon['view'] ?? 'fa6-solid:circle-info' }}"
                                         color="blue"
                                         display="inline-block"
                                         text=""
@@ -89,7 +89,7 @@
                                 @endif
                                 @if ($edit)
                                     <x-lavx::button
-                                        icon="{{ $actionColumnsIcon['edit'] ?? 'pen-to-square' }}"
+                                        icon="{{ $actionColumnsIcon['edit'] ?? 'fa6-solid:pen-to-square' }}"
                                         color="purple"
                                         display="inline-block"
                                         text=""
@@ -103,7 +103,7 @@
                                 @if ($delete)
                                     <span x-data="{ delete_{{Arr::get($row, $routeKeyName)}} : false }">
                                         <x-lavx::button
-                                            icon="{{ $actionColumnsIcon['delete'] ?? 'trash-can' }}"
+                                            icon="{{ $actionColumnsIcon['delete'] ?? 'fa6-solid:trash-can' }}"
                                             color="red"
                                             display="inline-block"
                                             text=""
@@ -125,7 +125,7 @@
                                             >
                                                 <x-slot:submit>
                                                     <x-lavx::form.submit
-                                                        icon="check"
+                                                        icon="fa6-solid:check"
                                                         color="red"
                                                         display="inline-block"
                                                         text=""
@@ -137,7 +137,7 @@
                                                 </x-slot>
                                             </x-lavx::form>
                                             <x-lavx::button
-                                                icon="xmark"
+                                                icon="fa6-solid:xmark"
                                                 color="green"
                                                 display="inline-block"
                                                 text=""
@@ -156,7 +156,7 @@
                                         && $extraTable[$num][$add_key]['type'] === 'button'
                                     )
                                         <x-lavx::button
-                                            icon="{{ $extraTable[$num][$add_key]['icon'] ?? 'info-circle' }}"
+                                            icon="{{ $extraTable[$num][$add_key]['icon'] ?? 'fa6-solid:circle-info' }}"
                                             color="{{ $extraTable[$num][$add_key]['color'] ?? 'blue' }}"
                                             display="inline-block"
                                             text=""

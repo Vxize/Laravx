@@ -8,8 +8,8 @@
     'textColor' => 'text-white',
     'color' => 'blue',
     'text' => __('lavx::sys.save'),
-    'iconPrefix' => 'fa-solid fa-fw',
-    'icon' => 'save',
+    'iconPrefix' => 'iconify-inline inline-block',
+    'icon' => 'fa-solid:save',
     'disabled' => false,
 ])
 @php

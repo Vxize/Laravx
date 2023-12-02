@@ -62,13 +62,13 @@ class PermissionController extends ResourceController
             $result[$num]['description'] = __('permission.'.$row->name);
             $result[$num]['role'] = [
                 'type' => 'button',
-                'icon' => 'user-tag',
+                'icon' => 'fa6-solid:user-tag',
                 'link' => route('admin.permissions.roles', $row->id),
                 'color' => 'green',
             ];
             $result[$num]['user'] = [
                 'type' => 'button',
-                'icon' => 'user',
+                'icon' => 'fa6-solid:user',
                 'link' => route('admin.permissions.users', $row->id),
                 'color' => 'yellow',
             ];

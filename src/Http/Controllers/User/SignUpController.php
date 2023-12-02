@@ -23,7 +23,7 @@ class SignUpController extends ResourceController
             'action' => route('signup'),
             'show_return' => false,
             'title' => __('lavx::user.register'),
-            'submit_icon' => 'user-plus',
+            'submit_icon' => 'fa6-solid:user-plus',
             'submit_text' => 'lavx::user.register',
         ]);
     }

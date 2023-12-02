@@ -62,13 +62,13 @@ class RoleController extends ResourceController
             $result[$num]['description'] = __('role.'.$row->name);
             $result[$num]['permission'] = [
                 'type' => 'button',
-                'icon' => 'eye',
+                'icon' => 'fa6-solid:eye',
                 'link' => route('admin.roles.permissions', $row->id),
                 'color' => 'green',
             ];
             $result[$num]['user'] = [
                 'type' => 'button',
-                'icon' => 'user',
+                'icon' => 'fa6-solid:user',
                 'link' => route('admin.roles.users', $row->id),
                 'color' => 'yellow',
             ];

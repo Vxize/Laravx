@@ -25,7 +25,7 @@ class ResetPasswordController extends ResourceController
             'action' => route('password.update'),
             'show_return' => false,
             'title' => __('lavx::user.reset_password'),
-            'submit_icon' => 'key',
+            'submit_icon' => 'fa6-solid:key',
             'submit_text' => 'lavx::user.reset_password',
         ]);
     }

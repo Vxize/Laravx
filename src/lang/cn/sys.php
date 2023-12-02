@@ -65,6 +65,7 @@ return [
     'please' => '請',
     'private_key' => '私鑰',
     'profile' => '個人資料',
+    'profile_short' => '個資',
     'public_key' => '公鑰',
     'qty' => '數量',
     'read_and_agree' => '我已經閱讀並同意',

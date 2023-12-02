@@ -45,7 +45,7 @@ class ResourceController extends Controller
             ]
         ],
         $route_key_name = 'id',  // can be changed by Model->getRouteKeyName()
-        $paginate = 7  // number per page
+        $paginate = 10  // number per page
     ;
 
     public function search(Request $request)

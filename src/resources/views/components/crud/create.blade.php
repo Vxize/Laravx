@@ -16,7 +16,7 @@
     'formData' => [],
     'submitText' => 'lavx::sys.save',
     'submitColor' => 'blue',
-    'submitIcon' => 'save',
+    'submitIcon' => 'fa-solid:save',
     'submitWidth' => 'w-full',
     'submitDisabled' => false,
     'hasUpload' => false,

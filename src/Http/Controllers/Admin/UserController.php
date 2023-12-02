@@ -40,7 +40,7 @@ class UserController extends ResourceController
                 break;
             case 'action':
                 $action = [
-                    'profile' => 'lavx::sys.profile',
+                    'profile' => 'lavx::sys.profile_short',
                     'login' => 'lavx::user.login',
                 ];
                 $user = auth()->user();
@@ -111,37 +111,37 @@ class UserController extends ResourceController
             if ($user_id) {
                 $result[$num]['profile'] = [
                     'type' => 'button',
-                    'icon' => 'id-card',
+                    'icon' => 'fa6-solid:id-card',
                     'link' => route('admin.users.show', $user_id),
                     'color' => 'blue',
                 ];
                 $result[$num]['login'] = [
                     'type' => 'button',
-                    'icon' => 'right-to-bracket',
+                    'icon' => 'fa6-solid:right-to-bracket',
                     'link' => route('admin.users.login', $user_id),
                     'color' => 'green',
                 ];
                 $result[$num]['log'] = [
                     'type' => 'button',
-                    'icon' => 'clock-rotate-left',
+                    'icon' => 'fa6-solid:clock-rotate-left',
                     'link' => route('admin.logs.index', ['user_id' => $user_id]),
                     'color' => 'purple',
                 ];
                 $result[$num]['permission'] = [
                     'type' => 'button',
-                    'icon' => 'eye',
+                    'icon' => 'fa6-solid:eye',
                     'link' => route('admin.users.permissions', $user_id),
                     'color' => 'yellow',
                 ];
                 $result[$num]['role'] = [
                     'type' => 'button',
-                    'icon' => 'user-tag',
+                    'icon' => 'fa6-solid:user-tag',
                     'link' => route('admin.users.roles', $user_id),
                     'color' => 'indigo',
                 ];
                 $result[$num]['impersonate'] = [
                     'type' => 'button',
-                    'icon' => 'rotate',
+                    'icon' => 'fa6-solid:rotate',
                     'link' => route('impersonate', $user_id),
                     'color' => 'red',
                 ];

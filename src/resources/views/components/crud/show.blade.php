@@ -53,7 +53,7 @@
     @if ($edit)
         <x-lavx::button
             link="{{ route($editRoute ?: $path.'.edit', $editId ?: Arr::get($record, $routeKeyName)) }}"
-            icon="pen-to-square"
+            icon="fa6-solid:pen-to-square"
             text="{{ __($editText ?: 'lavx::sys.edit') }}"
             width="w-1/2"
         />
@@ -61,7 +61,7 @@
     @if ($delete)
         <div x-data="{ del : false }">
             <x-lavx::button
-                icon="trash-can"
+                icon="fa6-solid:trash-can"
                 color="red"
                 :text="__('lavx::sys.delete')"
                 link="#"

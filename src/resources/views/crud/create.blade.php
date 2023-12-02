@@ -15,7 +15,7 @@
     alertEscaped="{{ $alert_escaped ?? false }}"
     submitText="{{ $submit_text ?? 'lavx::sys.save' }}"
     submitColor="{{ $submit_color ?? 'blue' }}"
-    submitIcon="{{ $submit_icon ?? 'save' }}"
+    submitIcon="{{ $submit_icon ?? 'fa-solid:save' }}"
     submitWidth="{{ $submit_width ?? 'w-full' }}"
     submitDisabled="{{ $submit_disabled ?? false }}"
     hasUpload="{{ $has_upload ?? false }}"

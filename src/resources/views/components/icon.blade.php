@@ -1,8 +1,5 @@
 @props([
-    'prefix' => 'fa-solid fa-fw',
-    'icon' => 'circle-info',
+    'prefix' => 'iconify-inline inline-block',
+    'icon' => 'fa-solid:info-circle',
 ])
-@php
-    $icon_class = $prefix.' fa-'.$icon;
-@endphp
-<i {{ $attributes->merge(['class' => $icon_class]) }}></i>
+<i {{ $attributes->merge(['class' => $prefix]) }} data-icon="{{$icon}}"></i>

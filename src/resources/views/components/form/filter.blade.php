@@ -19,7 +19,7 @@
         display="inline-block"
         color="red"
         link="{{ route($route, $search) }}"
-        icon="filter-circle-xmark"
+        icon="fa6-solid:filter-circle-xmark"
         text="{{ __('lavx::sys.reset') }}"
         textSize="lg:text-lg md:text-md text-base"
         padding="p-2"
@@ -29,7 +29,7 @@
     <x-slot:submit>
         <x-lavx::form.submit
             display="inline-block"
-            icon="filter"
+            icon="fa6-solid:filter"
             text="{{ __('lavx::sys.filter') }}"
             textSize="lg:text-lg md:text-md text-base"
             padding="p-2"

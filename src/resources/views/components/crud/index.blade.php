@@ -63,7 +63,7 @@
                         <x-lavx::button
                             link="{{ route($path.'.create') }}"
                             text=""
-                            icon="plus"
+                            icon="fa-solid:plus"
                         />
                     </div>
                 @endif
@@ -72,7 +72,7 @@
                         <x-lavx::button
                             :link="$download_link"
                             text=""
-                            icon="download"
+                            icon="fa-solid:download"
                             color="green"
                         />
                     </div>

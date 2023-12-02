@@ -21,7 +21,7 @@ class LoginController extends ResourceController
             'show_return' => false,
             'title' => __('lavx::user.login'),
             'error_title' => 'lavx::user.login_failed',
-            'submit_icon' => 'right-to-bracket',
+            'submit_icon' => 'fa6-solid:right-to-bracket',
             'submit_text' => 'lavx::user.login',
         ]);
     }

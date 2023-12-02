@@ -21,7 +21,7 @@ class ConfirmPasswordController extends ResourceController
             'action' => route('password.confirm'),
             'show_return' => false,
             'title' => __('lavx::user.confirm_password'),
-            'submit_icon' => 'check',
+            'submit_icon' => 'fa6-solid:check',
             'submit_text' => 'lavx::user.confirm_password',
         ]);
     }

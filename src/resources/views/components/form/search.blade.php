@@ -28,10 +28,10 @@
                 required
             />
             <a href="{{ $reset }}" class="absolute right-0 top-0 mt-5 mr-14 hover:opacity-50" >
-                <span class="text-3xl text-red-600"><x-lavx::icon icon="xmark" /></span>
+                <span class="text-3xl text-red-600"><x-lavx::icon icon="fa6-solid:xmark" /></span>
             </a>
             <button type="submit" class="absolute right-0 top-0 mt-5 mr-4 hover:opacity-50">
-                <span class="text-3xl text-blue-600"><x-lavx::icon icon="magnifying-glass" /></span>
+                <span class="text-3xl text-blue-600"><x-lavx::icon icon="fa6-solid:magnifying-glass" /></span>
             </button>
         </div>
     </x-slot>
