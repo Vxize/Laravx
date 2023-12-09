@@ -72,7 +72,7 @@
                         <x-lavx::button
                             :link="$download_link"
                             text=""
-                            icon="fa-solid:download"
+                            icon="el:download-alt"
                             color="green"
                         />
                     </div>
