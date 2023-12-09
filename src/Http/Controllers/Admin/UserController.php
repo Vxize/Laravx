@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Vxize\Lavx\Http\Controllers\ResourceController;
+use Vxize\Lavx\Events\UserCreatedByAdmin;
 use Vxize\Lavx\Events\UserLoginUpdated;
 use Vxize\Lavx\Events\UserPermissionAssigned;
 use Vxize\Lavx\Events\UserRoleAssigned;
@@ -67,6 +68,10 @@ class UserController extends ResourceController
                     'password',
                     'email_verified_at',
                     'unlocked_at'
+                ];
+            case 'store':
+                return [
+                    'email',
                 ];
                 break;
             default:
@@ -268,7 +273,7 @@ class UserController extends ResourceController
             'delete' => false,
             'edit' => false,
             'view' => false,
-            'add' => false,
+            'add' => true,
         ]);
     }
 
@@ -280,6 +285,23 @@ class UserController extends ResourceController
             'edit_id' => $user->profile->uid,
             'edit_route' => 'admin.profiles.edit',
         ]);
+    }
+
+    public function create()
+    {
+        return $this->createRecord([
+            'form' => 'lavx::forms.admin.users',
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        return $this->storeRecord($request);
+    }
+
+    public function onStoreSuccess(Request $request, $record)
+    {
+        event(new UserCreatedByAdmin($record, $request));
     }
 
 }

@@ -19,6 +19,15 @@ class UserEventSubscriber
         ]);
     }
 
+    public function logCreatedByAdmin($event)
+    {
+        activity('user')->event('CreatedByAdmin')
+            ->on($event->user)
+            ->by($event->request->user())
+            ->withProperties(['ip' => $event->request->ip()])
+            ->log(':subject.email created by :causer.email (:properties.ip)');
+    }
+
     public function logEmailChange($event)
     {
         activity('user')->event('UserEmailChanged')
@@ -197,6 +206,10 @@ class UserEventSubscriber
             'Illuminate\Auth\Events\Lockout' => 'logLockout',
             'Lab404\Impersonate\Events\LeaveImpersonation' => 'logLeaveImpersonation',
             'Lab404\Impersonate\Events\TakeImpersonation' => 'logTakeImpersonation',
+            'Vxize\Lavx\Events\UserCreatedByAdmin' => [
+                'createProfile',
+                'logCreatedByAdmin',
+            ],
             'Vxize\Lavx\Events\UserEmailChanged' => 'logEmailChange',
             'Vxize\Lavx\Events\UserEmailVerified' => 'logEmailVerified',
             'Vxize\Lavx\Events\UserLogin' => 'logLogin',
