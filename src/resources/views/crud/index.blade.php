@@ -1,7 +1,7 @@
 <x-lavx::crud.index
     title="{{ $title ?? '' }}"
     titleWidth="{{ $title_width ?? 'md:w-4/12' }}"
-    width="{{ $width ?? 'max-w-7xl' }}"
+    width="{{ $width ?? 'max-w-full' }}"
     margin="{{ $margin ?? 'mx-auto mt-6' }}"
     path="{{ $path ?? '' }}"
     :table=" $table ?? [] "

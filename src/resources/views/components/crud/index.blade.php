@@ -1,7 +1,7 @@
 @props([
     'title' => '',
     'titleWidth' => 'md:w-4/12',
-    'width' => 'max-w-7xl',
+    'width' => 'max-w-full',
     'margin' => 'mx-auto mt-6',
     'path' => '',
     'table' => [],

@@ -12,15 +12,36 @@
     </head>
     <body>
         <div class="text-gray-700 antialiased">
-            <div class="min-h-screen {{ config('lavx.site_background_color', 'bg-gray-100') }}">
-                <x-lavx::layout.navbar />
-                @impersonating($guard = null)
-                    @includeFirst(['impersonate', 'lavx::impersonate'], ['name' => auth()->user()->profile->name ?? ''])
-                @endImpersonating
-                @if (env('TOP_BANNER'))
-                    @includeIf(env('TOP_BANNER'))
-                @endif
-                <main id="main" class="pt-14 md:pt-0 pb-10 {{ config('lavx.main_section_margin', 'md:ml-48') }}">
+            <div class="min-h-screen flex bg-gray-100">
+                <input type="checkbox" id="menu-toggle" class="relative sr-only peer" checked>
+                <label
+                    for="menu-toggle"
+                    class="fixed top-0 z-40 inline-block p-4 bg-blue-600
+                    left-48 md:left-0
+                    transition-all duration-500
+                    rotate-180 md:rotate-0
+                    peer-checked:rotate-0 peer-checked:md:rotate-180
+                    peer-checked:left-0 peer-checked:md:left-48"
+                >
+                    <div class="w-6 h-1 mb-3 rotate-45 bg-white"></div>
+                    <div class="w-6 h-1 -rotate-45 bg-white"></div>
+                </label>
+                <div class="fixed top-0 left-0 z-40 h-full shadow-lg
+                    border-r border-gray-300
+                    transition-all duration-500 transform
+                    translate-x-0 md:-translate-x-full
+                    peer-checked:md:translate-x-0 peer-checked:-translate-x-full
+                    w-48 bg-gray-50 lg:text-lg md:text-base text-sm
+                ">
+                    <x-lavx::layout.navbar />
+                </div>
+                <main id="main" class="pl-0 w-full pb-8 peer-checked:md:pl-48">
+                    @if (env('TOP_BANNER'))
+                        @includeIf(env('TOP_BANNER'))
+                    @endif
+                    @impersonating($guard = null)
+                        @includeFirst(['impersonate', 'lavx::impersonate'], ['name' => auth()->user()->profile->name ?? ''])
+                    @endImpersonating
                     {{ $slot }}
                 </main>
             </div>

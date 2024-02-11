@@ -1,6 +1,5 @@
 <x-lavx::alert
     margin="mx-auto fixed"
-    padding="md:pl-48 pb-6 md:pt-6 pt-20"
     color="purple"
     escaped="true" 
 >
