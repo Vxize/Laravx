@@ -2,7 +2,7 @@
     'title' => '',
     'titleWidth' => 'md:w-4/12',
     'width' => 'max-w-full',
-    'margin' => 'mx-auto mt-6',
+    'margin' => '',
     'path' => '',
     'table' => [],
     'columns' => [],

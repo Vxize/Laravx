@@ -2,7 +2,7 @@
     title="{{ $title ?? '' }}"
     titleWidth="{{ $title_width ?? 'md:w-4/12' }}"
     width="{{ $width ?? 'max-w-full' }}"
-    margin="{{ $margin ?? 'mx-auto mt-6' }}"
+    margin="{{ $margin ?? '' }}"
     path="{{ $path ?? '' }}"
     :table=" $table ?? [] "
     :columns=" $columns ?? [] "

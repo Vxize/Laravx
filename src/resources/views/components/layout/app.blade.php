@@ -26,7 +26,7 @@
                     <div class="w-6 h-1 mb-3 rotate-45 bg-white"></div>
                     <div class="w-6 h-1 -rotate-45 bg-white"></div>
                 </label>
-                <div class="fixed top-0 left-0 z-40 h-full shadow-lg
+                <div class="fixed top-0 left-0 z-40 h-full shadow-xl overflow-y-auto
                     border-r border-gray-300
                     transition-all duration-500 transform
                     translate-x-0 md:-translate-x-full

@@ -6,7 +6,7 @@
     'border' => 'border',
 ])
 @php
-    $box_class = 'rounded-lg shadow-lg w-full '.$width
+    $box_class = 'rounded-xl shadow-xl w-full '.$width
         .' '.$margin
         .' '.$padding
         .' '.$border
