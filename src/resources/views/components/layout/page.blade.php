@@ -2,7 +2,7 @@
     'container_padding' => 'p-4',
     'container_width' => 'w-full max-w-full',
     'width' => 'max-w-md',
-    'margin' => '',
+    'margin' => 'mx-auto',
     'padding' => 'p-6',
     'background' => 'bg-white',
 ])
