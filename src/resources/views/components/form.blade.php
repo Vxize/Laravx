@@ -1,6 +1,7 @@
 @props([
     'above_form' => '',
     'below_form' => '',
+    'after_submit' => '',
     'action' => '',
     'type' => '',
     'showError' => true,
@@ -51,6 +52,8 @@
             />
         </div>
     @endif
+
+    {{ $after_submit }}
 
 </form>
 {{ $below_form }}
