@@ -1,7 +1,7 @@
 @props([
     'title' => '',
     'margin' => 'mx-auto mt-6',
-    'width' => 'max-w-md',
+    'width' => 'max-w-lg',
     'path' => '',
     'showReturn' => true,
     'return' => '',

@@ -1,5 +1,6 @@
 @props([
     'title' => '',
+    'width' => 'max-w-lg',
     'margin' => 'mx-auto mt-6',
     'path' => '',
     'showReturn' => true,

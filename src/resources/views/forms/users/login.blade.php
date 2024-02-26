@@ -4,14 +4,14 @@
 </div>
 
 <!-- Password -->
-<div class="mt-4">
+<div class="mt-6">
     <x-lavx::form.input :label="__('lavx::user.password')" class="block mt-1 w-full"
         type="password" name="password"
         required autocomplete="current-password" />
 </div>
 
 <!-- Remember Me -->
-<div class="mt-4">
+<div class="mt-6">
     <p class="text-right">
         <x-lavx::a link="{{ route('password.request') }}">
             {{ __('lavx::user.forget_password') }}?

@@ -2,6 +2,7 @@
     'disabled' => false,
     'checked' => false,
     'required' => false,
+    'readonly' => false,
     'value' => '',
     'id',
     'name',
@@ -16,9 +17,10 @@
         class="lg:w-8 md:w-6 sm:w-5 lg:h-8 md:h-6 sm:h-5 rounded-full text-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
         name="{{ $name }}"
         value="{{ $value }}"
-        disabled="{{ $disabled }}"
-        checked="{{ $checked }}"
-        required="{{ $required }}"
+        :required=" $required "
+        :disabled=" $disabled "
+        :checked=" $checked "
+        :readonly=" $readonly "
         {{ $attributes }}
     />
     <span class="ml-2 {{ $textColor }}">{{ $label }}</span>

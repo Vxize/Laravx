@@ -1,6 +1,7 @@
 <x-lavx::crud.create
     title="{{ $title ?? '' }}"
     margin="{{ $margin ?? 'mx-auto mt-6' }}"
+    width="{{ $width ?? 'max-w-lg' }}"
     path="{{ $path ?? '' }}"
     showReturn="{{ $show_return ?? true }}"
     return="{{ $return ?? '' }}"

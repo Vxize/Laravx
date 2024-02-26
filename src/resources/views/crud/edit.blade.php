@@ -1,7 +1,7 @@
 <x-lavx::crud.edit
     title="{{ $title ?? '' }}"
     margin="{{ $margin ?? 'mx-auto mt-6' }}"
-    width="{{ $width ?? 'max-w-md' }}"
+    width="{{ $width ?? 'max-w-lg' }}"
     path="{{ $path ?? '' }}"
     :record="$record ?? []"
     showReturn="{{ $show_return ?? true }}"

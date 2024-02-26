@@ -13,8 +13,8 @@
         type="checkbox"
         class="lg:w-8 md:w-6 sm:w-5 lg:h-8 md:h-6 sm:h-5 text-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
         name="{{ $name }}"
-        disabled="{{ $disabled }}"
-        checked="{{ $checked }}"
+        :disabled=" $disabled "
+        :checked=" $checked "
         {{ $attributes }}
     />
     <span class="ml-2 {{ $textColor }}">{{ $label ?? $slot }}</span>

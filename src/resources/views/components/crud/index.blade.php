@@ -83,13 +83,7 @@
 
     @includeIf($filter, $filterData)
 
-    @if ($success_message = session('success'))
-        <x-lavx::alert color="green" text="{{ $success_message }}" />
-    @endif
-
-    @if ($error_message = session('error'))
-        <x-lavx::alert color="red" text="{{ $error_message }}" />
-    @endif
+    <x-lavx::page.session />
 
     @if ($return)
         <x-lavx::button

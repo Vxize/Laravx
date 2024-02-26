@@ -1,5 +1,6 @@
 @props([
     'disabled' => false,
+    'readonly' => false,
     'name' => '',
     'label' => '',
     'id' => null,
@@ -14,11 +15,12 @@
 @if ($label && !$hidden)
     <x-lavx::form.label for="{{ $name }}" value="{{ $label }}" />
 @endif
-<select 
-    {{ $disabled ? 'disabled' : '' }}
+<select
+    @disabled($disabled)
+    @readonly($readonly)
     id="{{ $id ?? $name }}"
     name="{{ $name }}"
-    {{ $attributes->merge(['class' => 'appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-3 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline '.$hidden])}}
+    {{ $attributes->merge(['class' => 'appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-3 pr-8 rounded shadow leading-tight disabled:cursor-not-allowed focus:outline-none focus:shadow-outline '.$hidden])}}
 >
     @if ($count === 1)
         @foreach ($option as $val => $text)
@@ -31,7 +33,7 @@
         @foreach ($option as $val => $text)
             <option
                 value="{{ $val }}"
-                {{ $selected && $selected == $val ? 'selected' : '' }}
+                @selected($selected && $selected == $val)
             >{{ $text }}</option>
         @endforeach
     @endif

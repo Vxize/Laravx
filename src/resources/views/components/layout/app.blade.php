@@ -4,9 +4,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>{{ config('app.name', 'Lavx') }}</title>
+        <title>{{ __('app.site_name') }}</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-        {!! config('lavx.site_font', '') !!}
+        {!! config('site.font', '') !!}
         <script defer src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.min.js"></script>
         <script defer src="https://cdnjs.cloudflare.com/ajax/libs/iconify/3.1.1/iconify.min.js"></script>
     </head>

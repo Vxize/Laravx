@@ -40,8 +40,8 @@ switch ($color) {
         break;
 }
 @endphp
-<button type="submit" {{ $disabled ? 'disabled' : '' }}
-    class="no-underline text-center font-bold rounded-lg shadow-lg uppercase tracking-widest cursor-pointer outline-none focus:outline-none disabled:opacity-50
+<button type="submit" @disabled($disabled)
+    class="no-underline text-center font-bold rounded-lg shadow-lg uppercase tracking-widest cursor-pointer outline-none focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed
         {{ $width }}
         {{ $maxWidth }}
         {{ $margin }}
@@ -50,7 +50,6 @@ switch ($color) {
         {{ $textSize  }}
         {{ $textColor }}
         {{ $color_class }}
-        {{ $disabled ? 'opacity-30' : '' }}
     "
 >
     @if ($icon)

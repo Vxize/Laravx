@@ -6,10 +6,10 @@
         autofocus
     />
 </div>
-<div class="mt-4">
+<div class="mt-6">
     <x-lavx::form.checkbox name="reset_password" label="{{ __('lavx::user.reset_password') }}" />
 </div>
-<div class="mt-4">
+<div class="mt-6">
     <x-lavx::form.label :value="__('lavx::user.lock_account')" />
     <x-lavx::form.radio
         name="lock"

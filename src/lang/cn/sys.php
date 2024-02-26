@@ -55,6 +55,7 @@ return [
     'no_record' => '沒有任何記錄',
     'number' => '號碼',
     'input_number_only' => '請輸入純數字',
+    'invisible' => '不可見',
     'operation' => '操作',
     'optional' => '可選項',
     'or' => '或',
@@ -92,7 +93,8 @@ return [
     'unlock' => '解鎖',
     'updated_at' => '修改時間',
     'upload' => '上傳',
-    'view' => '查看',
     'version' => '版本',
+    'view' => '查看',
+    'visible' => '可見',
     'yes' => '是',
 ];

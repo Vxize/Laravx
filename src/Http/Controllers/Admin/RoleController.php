@@ -81,6 +81,7 @@ class RoleController extends ResourceController
         $admin_user = new AdminUser;
         $table_data = User::with('profile')->role($role->name);
         return $admin_user->indexRecord($request, [
+            'title' => __('lavx::user.role').': '.__('role.'.$role->name),
             'table_data' => $table_data,
             'table_columns' => [
                 'profile.cn_name' => 'lavx::profile.cn_name',

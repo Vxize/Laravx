@@ -78,16 +78,21 @@ class PermissionController extends ResourceController
 
     public function getRoles(Request $request, Permission $permission)
     {
-        $roles = $permission->getRoleNames()->implode('</li><li>');
-        $alert_text = $roles
-            ? '<ul><li>'.$roles.'</li></ul>'
-            : __('lavx::sys.no_record');
+        $roles = $permission->getRoleNames();
+        $has_roles = $roles->isNotEmpty();
+        if ($has_roles) {
+            $role_names = $roles->map(fn($item) => __('role.'.$item))
+                ->implode('</li><li>');
+            $alert_text = '<ul><li>'.$role_names.'</li></ul>';
+        } else {
+            $alert_text = __('lavx::sys.no_record');
+        }
         return view('lavx::alert', [
             'title' => __('lavx::user.permission').__('lavx::user.role'),
-            'subtitle' => $permission->name,
+            'subtitle' => __('permission.'.$permission->name),
             'return_link' => route('admin.permissions.index'),
             'alert' => $alert_text,
-            'alert_escaped' => $roles,
+            'alert_escaped' => $has_roles,
         ]);
     }
 
@@ -96,6 +101,8 @@ class PermissionController extends ResourceController
         $admin_user = new AdminUser;
         $table_data = User::with('profile')->permission($permission->name);
         return $admin_user->indexRecord($request, [
+            'title' => __('lavx::user.permission')
+                .': '.__('permission.'.$permission->name),
             'table_data' => $table_data,
             'table_columns' => [
                 'profile.cn_name' => 'lavx::profile.cn_name',

@@ -30,9 +30,10 @@ class SignUpController extends ResourceController
 
     public function store(Request $request)
     {
+        $user_table = with(new User)->getTable();
         $request->validate([
             'name' => 'string|max:255',
-            'email' => 'required|string|email:filter|max:255|unique:users',
+            'email' => 'required|string|email:filter|max:255|unique:'.$user_table,
             'password' => ['required', 'confirmed', Password::min(8)],
         ]);
         $user = User::create([

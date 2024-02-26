@@ -4,7 +4,7 @@
 </div>
 
 <!-- Password -->
-<div class="mt-4">
+<div class="mt-6">
     <x-lavx::form.input 
         :label="__('lavx::user.password').'（'.__('lavx::user.password_min').'）'"
         class="block mt-1 w-full"
@@ -12,7 +12,7 @@
 </div>
 
 <!-- Confirm Password -->
-<div class="mt-4">
+<div class="mt-6">
     <x-lavx::form.input :label="__('lavx::user.confirm_password')" class="block mt-1 w-full"
         type="password" name="password_confirmation" required />
 </div>

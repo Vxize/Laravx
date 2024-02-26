@@ -77,10 +77,10 @@ class ResourceController extends Controller
                 return $common;
                 break;
             case 'store':  // columns for store
-                return $common;
+                return array_keys($common);
                 break;
             case 'update':  // columns for update
-                return $common;
+                return array_keys($common);
                 break;
             case 'action':  // buttons in action column
                 return [];

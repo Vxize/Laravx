@@ -48,7 +48,7 @@ $cursor = $link === '_' ? 'cursor-not-allowed' : 'cursor-pointer';
 @else
 <a
 @endif
-    class="no-underline text-center font-bold rounded-lg shadow-lg uppercase tracking-widest outline-none focus:outline-none disabled:opacity-50
+    class="no-underline text-center font-bold rounded-lg shadow-lg uppercase tracking-widest outline-none focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed
         {{ $width }}
         {{ $maxWidth }}
         {{ $margin }}
