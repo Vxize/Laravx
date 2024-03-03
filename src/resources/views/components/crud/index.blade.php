@@ -20,6 +20,7 @@
     'delete' => true,
     'textSize' => 'lg:text-lg md:text-base text-sm',
     'paginator' => true,
+    'paginate' => null,
     'return' => '',
     'routeKeyName' => 'id',
     'searchable' => '',
@@ -109,6 +110,7 @@
         :delete="$delete"
         :textSize="$textSize"
         :paginator="$paginator"
+        :paginate="$paginate"
         :routeKeyName="$routeKeyName"
         :noRecordMessage="$noRecordMessage"
     />

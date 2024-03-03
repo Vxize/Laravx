@@ -13,6 +13,7 @@
     'delete' => true,
     'textSize' => 'lg:text-lg md:text-base text-sm',
     'paginator' => true,
+    'paginate' => null,
     'routeKeyName' => 'id',
     'noRecordMessage' => 'lavx::sys.no_record',
 ])
@@ -176,6 +177,6 @@
         </table>
     </div>
     @if ($paginator)
-        <div class="p-3">{!! $table->withQueryString()->onEachSide(1)->links('lavx::paginator') ?? ''  !!}</div>
+        <div class="p-3">{!! $table->withQueryString()->onEachSide(1)->links('lavx::paginator', ['paginate' => $paginate]) ?? ''  !!}</div>
     @endif
 @endif

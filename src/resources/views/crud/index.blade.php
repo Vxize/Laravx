@@ -20,6 +20,7 @@
     delete="{{ $delete ?? true}}"
     textSize="{{ $text_size ?? 'lg:text-lg md:text-base text-sm' }}"
     paginator="{{ $paginator ?? true}}"
+    paginate="{{ $paginate ?? null}}"
     return="{{ $return ?? '' }}"
     routeKeyName="{{ $route_key_name ?? 'id' }}"
     searchable="{{ $searchable ?? '' }}"

@@ -5,6 +5,7 @@
 @php
     $query = request()->query();
     $search = empty($query['search']) ? null : ['search' => $query['search']];
+    $paginate = empty($query['paginate']) ? null : ['paginate' => $query['paginate']];
 @endphp
 <x-lavx::form
     action="{{ route($route, request()->query()) }}"
@@ -13,6 +14,9 @@
 >
 @if (! empty($query['search']))
     <input type="hidden" name="search" value="{{ $query['search'] }}" >
+@endif
+@if (! empty($query['paginate']))
+    <input type="hidden" name="paginate" value="{{ $query['paginate'] }}" >
 @endif
     {{ $slot }}
     <x-slot:submit>

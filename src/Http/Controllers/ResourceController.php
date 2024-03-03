@@ -45,7 +45,7 @@ class ResourceController extends Controller
             ]
         ],
         $route_key_name = 'id',  // can be changed by Model->getRouteKeyName()
-        $paginate = 10  // number per page
+        $paginate = null  // number per page
     ;
 
     public function search(Request $request)
@@ -110,7 +110,12 @@ class ResourceController extends Controller
                 date('Y-m-d_H-i-s')
             );
         }
-        $table = $table_data->paginate($parm['paginate'] ?? $this->paginate);
+        $default_paginate = intval(config('lavx.paginate'));
+        $paginate = $request->input('paginate')
+            ?? $parm['paginate']
+            ?? $this->paginate
+            ?? $default_paginate;
+        $table = $table_data->paginate($paginate);
         return view($parm['template'] ?? $this->views['index'], array_merge([
             'title' => __($this->titles['index'] ?? $this->name),
             'table' => $table,
@@ -121,6 +126,7 @@ class ResourceController extends Controller
             'action_columns' => $parm['action_columns'] ?? $this->columns('action') ?? [],
             'extra_columns' => $parm['extra_columns'] ?? $this->columns('extra') ?? [],
             'extra_table' => $parm['extra_table'] ?? $this->extraTable($table),
+            'paginate' => $paginate,
         ], $parm));
     }
 

@@ -1,3 +1,6 @@
+@props([
+    'paginate' => null,
+])
 @if ($paginator->hasPages())
     <nav role="navigation" aria-label="{{ __('Pagination Navigation') }}" class="flex items-center justify-between">
         <div class="flex justify-between flex-1 sm:hidden">
@@ -36,6 +39,10 @@
                         {!! __('pagination.record') !!}
                     )
                 </p>
+            </div>
+
+            <div>
+                <x-lavx::form.paginate paginate="{{ $paginate }}" />
             </div>
 
             <div>
