@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'address' => '地址',
+    'address2' => '其它地址信息（单元号或门牌号等）',
+    'age' => '年龄',
+    'birth_year' => '出生年份',
+    'city' => '城市',
+    'cn_name' => '中文名',
+    'contact' => '联络方式',
+    'contact_admin_to_change' => '如需修改个人资料，请联络管理员',
+    'family' => '家庭',
+    'family_member' => '家人',
+    'female' => '女',
+    'first_name' => '名字',
+    'last_name' => '姓氏',
+    'level' => '等级',
+    'male' => '男',
+    'name' => '姓名',
+    'phone' => '电话',
+    'sex' => '性别',
+    'spouse' => '配偶',
+    'state' => '州/省/地区',
+    'wechat' => '微信（Wechat）',
+    'zipcode' => '邮编',
+];
