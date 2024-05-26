@@ -191,7 +191,7 @@ class ResourceController extends Controller
         }
         return to_route(
             $request->_redirect ?? $this->redirects['store'] ?? $this->path.'.index',
-            $record ?? null
+            $request->_redirect_data ?? $record ?? null
         )->with($result, __($message));
     }
  
@@ -284,38 +284,110 @@ class ResourceController extends Controller
         }
         return to_route(
             $request->_redirect ?? $this->redirects['update'] ?? $this->path.'.index',
-            $record ?? null
+            $request->_redirect_data ?? $record ?? null
+        )->with($result, __($message));
+    }
+
+    // things to do on json success update
+    public function onUpdateJsonSuccess(Request $request, $record, $old_record, $json_column)
+    {
+        
+    }
+
+    // things to do on failed update
+    public function onUpdateJsonFail(Request $request, $record, $json_column)
+    {
+        
+    }
+
+    public function updateJsonColumn(Request $request, $record, $json_column, $data = [])
+    {
+        $old_record = $record->replicate();
+        $row = $this->updateOneRecord($record, [
+            $json_column => array_merge($record[$json_column] ?? [], $data)
+        ]);
+        if ($row) {
+            $result = 'success';
+            $message = $request->success_message ?? $this->messages['update']['success'];
+            $this->onUpdateJsonSuccess($request, $record, $old_record, $json_column);
+        } else {
+            $result = 'error';
+            $message = $request->error_message ?? $this->messages['update']['error'];
+            $this->onUpdateJsonFail($request, $record, $json_column);
+        }
+        return to_route(
+            $request->_redirect ?? $this->redirects['update'] ?? $this->path.'.index',
+            $request->_redirect_data ?? $record ?? null
         )->with($result, __($message));
     }
  
     // things to do on success destroy
-    public function onDestroySuccess($record)
+    public function onDestroySuccess(Request $request, $record)
     {
         
     }
 
     // things to do on failed destroy
-    public function onDestroyFail($record)
+    public function onDestroyFail(Request $request, $record)
     {
         
     }
 
-    public function destroyRecord($record)
+    public function destroyRecord(Request $request, $record)
     {
         $deleted_record = $record->replicate();
         $deleted = $record->delete();
         if ($deleted) {
             $result = 'success';
             $message = $this->messages['destroy']['success'];
-            $this->onDestroySuccess($deleted_record);
+            $this->onDestroySuccess($request, $deleted_record);
         } else {
             $result = 'error';
             $message = $this->messages['destroy']['error'];
-            $this->onDestroyFail($deleted_record);
+            $this->onDestroyFail($request, $deleted_record);
         }
         return to_route(
-            $this->redirects['destroy'] ?? $this->path.'.index',
-            $deleted_record ?? null
+            $request->_redirect ?? $this->redirects['destroy'] ?? $this->path.'.index',
+            $request->_redirect_data ?? $deleted_record ?? null
+        )->with($result, __($message));
+    }
+
+    // things to do on json success destroy
+    public function onDestroyJsonSuccess(Request $request, $record, $json_column)
+    {
+        
+    }
+
+    // things to do on json failed destroy
+    public function onDestroyJsonFail(Request $request, $record, $json_column)
+    {
+        
+    }
+
+    public function destroyJsonColumn(Request $request, $record, $json_column, $json_keys = [])
+    {
+        $deleted_record = $record->replicate();
+        $json_column_data = $record[$json_column] ?? [];
+        foreach ($json_keys as $key) {
+            if ($key && isset($json_column_data[$key])) {
+                unset($json_column_data[$key]);
+            }
+        }
+        $row = $this->updateOneRecord($record, [
+            $json_column => $json_column_data ?: null
+        ]);
+        if ($row) {
+            $result = 'success';
+            $message = $this->messages['destroy']['success'];
+            $this->onDestroyJsonSuccess($request, $deleted_record, $json_column);
+        } else {
+            $result = 'error';
+            $message = $this->messages['destroy']['error'];
+            $this->onDestroyJsonFail($request, $deleted_record, $json_column);
+        }
+        return to_route(
+            $request->_redirect ?? $this->redirects['destroy'] ?? $this->path.'.index',
+            $request->_redirect_data ?? $deleted_record ?? null
         )->with($result, __($message));
     }
 }
