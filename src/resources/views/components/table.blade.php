@@ -3,6 +3,7 @@
     'table' => [],
     'columns' => [],
     'rawColumns' => [],
+    'deleteColumns' => [],
     'extraColumns' => [],
     'extraTable' => [],
     'actionColumns' => [],
@@ -60,7 +61,11 @@
             </thead>
             <tbody class="divide-y divide-gray-300">
                 @foreach ($table as $num => $row)
-                    <tr class="hover:bg-gray-200 whitespace-nowrap {{ $loop->even ? 'bg-gray-100' : '' }}">
+                    <tr class="hover:bg-gray-200 whitespace-nowrap {{ $loop->even ? 'bg-gray-100' : '' }}"
+                        @if ($delete)
+                            x-data="{ delete_{{Arr::get($row, $routeKeyName)}} : false }"
+                        @endif
+                    >
                         @foreach ($columns as $key => $col)
                             <td class="py-2 px-6">
                                 @if (!empty($rawColumns) && in_array($key, $rawColumns))
@@ -102,55 +107,18 @@
                                     />
                                 @endif
                                 @if ($delete)
-                                    <span x-data="{ delete_{{Arr::get($row, $routeKeyName)}} : false }">
-                                        <x-lavx::button
-                                            icon="{{ $actionColumnsIcon['delete'] ?? 'fa6-solid:trash-can' }}"
-                                            color="red"
-                                            display="inline-block"
-                                            text=""
-                                            link="#"
-                                            padding="p-2"
-                                            margin="my-0 mx-auto"
-                                            width="w-12"
-                                            textSize='lg:text-lg md:text-base text-sm'
-                                            @click.prevent=" delete_{{Arr::get($row, $routeKeyName)}} = true"
-                                        />
-                                        <div x-cloak x-show="delete_{{Arr::get($row, $routeKeyName)}}" x-transition class="p-3 max-w-md bg-white border border-gray-300 rounded-lg shadow-lg mt-2">
-                                            <x-lavx::h5 :text="__('lavx::sys.confirm').__('lavx::sys.delete').'？'" class="text-red-600 font-semibold" />
-                                            <x-lavx::p :text="__('lavx::sys.data_cannot_recover')" class="text-red-600 font-semibold" />
-                                            <x-lavx::form
-                                                action="{{ route($path.'.destroy', Arr::get($row, $routeKeyName)) }}"
-                                                type="delete"
-                                                class="inline-block"
-                                                showError="0"
-                                            >
-                                                <x-slot:submit>
-                                                    <x-lavx::form.submit
-                                                        icon="fa6-solid:check"
-                                                        color="red"
-                                                        display="inline-block"
-                                                        text=""
-                                                        padding="p-2"
-                                                        margin="my-0 mx-auto"
-                                                        width="w-14"
-                                                        textSize='lg:text-lg md:text-base text-sm'
-                                                    />
-                                                </x-slot>
-                                            </x-lavx::form>
-                                            <x-lavx::button
-                                                icon="fa6-solid:xmark"
-                                                color="green"
-                                                display="inline-block"
-                                                text=""
-                                                link="#"
-                                                padding="p-2"
-                                                margin="my-0 mx-auto"
-                                                width="w-16"
-                                                textSize='lg:text-lg md:text-base text-sm'
-                                                @click.prevent=" delete_{{Arr::get($row, $routeKeyName)}} = false"
-                                            />
-                                        </div>
-                                    </span>
+                                    <x-lavx::button
+                                        icon="{{ $actionColumnsIcon['delete'] ?? 'fa6-solid:trash-can' }}"
+                                        color="red"
+                                        display="inline-block"
+                                        text=""
+                                        link="#"
+                                        padding="p-2"
+                                        margin="my-0 mx-auto"
+                                        width="w-12"
+                                        textSize='lg:text-lg md:text-base text-sm'
+                                        @click.prevent="delete_{{Arr::get($row, $routeKeyName)}} = true"
+                                    />
                                 @endif
                                 @foreach ($actionColumns as $add_key => $add_col)
                                     @if (isset($extraTable[$num][$add_key]['type'])
@@ -169,6 +137,31 @@
                                         />
                                     @endif
                                 @endforeach
+                            </td>
+                        @endif
+                        @if ($delete)
+                            <td class="hide">
+                                <x-lavx::modal
+                                    id="delete_{{Arr::get($row, $routeKeyName)}}"
+                                    maxWidth="max-w-sm"
+                                    openButton=""
+                                    xdata=0
+                                >
+                                    <x-lavx::h2 :text="__('lavx::sys.confirm').__('lavx::sys.delete').'？'" class="text-red-600 font-semibold" />
+                                    <x-lavx::alert :text="__('lavx::sys.data_cannot_recover')" color="red" />
+                                    <x-lavx::form
+                                        action="{{ route($path.'.destroy', Arr::get($row, $routeKeyName)) }}"
+                                        type="delete"
+                                        showError="0"
+                                        submitText="lavx::sys.confirm"
+                                        submitIcon="fa6-solid:check"
+                                        submitColor="red"
+                                    >
+                                        @foreach ($deleteColumns as $delete_column)
+                                            <input type="hidden" name="{{ $delete_column }}" value="{{ Arr::get($row, $delete_column) }}" />
+                                        @endforeach
+                                    </x-lavx::form>
+                                </x-lavx::modal>
                             </td>
                         @endif
                     </tr>

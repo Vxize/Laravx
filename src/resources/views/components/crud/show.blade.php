@@ -59,42 +59,25 @@
         />
     @endif
     @if ($delete)
-        <div x-data="{ del : false }">
-            <x-lavx::button
-                icon="fa6-solid:trash-can"
-                color="red"
-                :text="__('lavx::sys.delete')"
-                link="#"
-                width="w-1/2"
-                @click.prevent=" del = true"
+        <x-lavx::modal
+            id="del"
+            maxWidth="max-w-sm"
+            openButtonIcon="fa6-solid:trash-can"
+            openButtonColor="red"
+            openButtonText="{{__('lavx::sys.delete')}}"
+            openButtonWidth="w-1/2"
+        >
+            <x-lavx::h2 :text="__('lavx::sys.confirm').__('lavx::sys.delete').'？'" class="text-red-600 font-semibold" />
+            <x-lavx::alert :text="__('lavx::sys.data_cannot_recover')" color="red" />
+            <x-lavx::form
+                action="{{ route($deleteRoute ?: $path.'.destroy', $record->{$routeKeyName}) }}"
+                type="delete"
+                showError="0"
+                submitText="lavx::sys.confirm"
+                submitIcon="fa6-solid:check"
+                submitColor="red"
             />
-            <div x-cloak x-show="del" x-transition class="p-3 mx-auto max-w-md bg-white border border-gray-300 rounded-lg shadow-lg mt-2 text-center">
-                <x-lavx::h3 :text="__('lavx::sys.confirm').__('lavx::sys.delete').'？'" class="text-red-600 font-semibold" />
-                <x-lavx::h4 :text="__('lavx::sys.data_cannot_recover')" class="text-red-600 font-semibold" />
-                <x-lavx::flex>
-                    <div class="w-full md:w-1/2 p-2">
-                        <x-lavx::form
-                            action="{{ route($deleteRoute ?: $path.'.destroy', $record->{$routeKeyName}) }}"
-                            type="delete"
-                            submitText="lavx::sys.yes"
-                            submitIcon="check"
-                            submitColor="red"
-                            showError="0"
-                        />
-                    </div>
-                    <div class="w-full md:w-1/2 p-2">
-                        <x-lavx::button
-                            icon="xmark"
-                            color="green"
-                            display="inline-block"
-                            :text="__('lavx::sys.no')"
-                            link="#"
-                            @click.prevent="del = false"
-                        />
-                    </div>
-                </x-lavx::flex>
-            </div>
-        </div>
+        </x-lavx::modal>
     @endif
     {{ $slot ?? '' }}
 </x-lavx::layout.page>
