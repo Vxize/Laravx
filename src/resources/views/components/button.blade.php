@@ -7,9 +7,12 @@
     'textSize' => 'lg:text-2xl md:text-xl text-lg',
     'textColor' => 'text-white',
     'color' => 'blue',
+    'round' => 'rounded-lg',
+    'shadow' => 'shadow-lg',
     'text' => __('lavx::sys.back'),
     'iconPrefix' => 'iconify-inline inline-block',
     'icon' => 'fa-solid:undo',
+    'iconRight' => '',
     'link' => '',
     'external' => false,
     'type' => '',
@@ -48,12 +51,14 @@ $cursor = $link === '_' ? 'cursor-not-allowed' : 'cursor-pointer';
 @else
 <a
 @endif
-    class="no-underline text-center font-bold rounded-lg shadow-lg uppercase tracking-widest outline-none focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed
+    class="no-underline text-center font-bold uppercase tracking-widest outline-none focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed
         {{ $width }}
         {{ $maxWidth }}
         {{ $margin }}
         {{ $padding }}
         {{ $display }}
+        {{ $round }}
+        {{ $shadow }}
         {{ $textSize  }}
         {{ $textColor }}
         {{ $color_class }}
@@ -76,6 +81,9 @@ $cursor = $link === '_' ? 'cursor-not-allowed' : 'cursor-pointer';
         <x-lavx::icon prefix="{{ $iconPrefix }}" icon="{{ $icon }}" />
     @endif
     {{ $text }}
+    @if ($iconRight)
+        <x-lavx::icon prefix="{{ $iconPrefix }}" icon="{{ $iconRight }}" />
+    @endif
 @if ($type === 'button' || $link === '_')
 </button>
 @else
