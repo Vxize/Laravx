@@ -3,17 +3,19 @@
     'readonly' => false,
     'name' => '',
     'label' => '',
+    'labelDisplay' => 'block',
     'id' => null,
     'option' => [],
     'selected' => '',
+    'noSelectedText' => __('lavx::sys.please').__('lavx::sys.select'),
     'hideOnOneOption' => true,
 ])
 @php
     $count = is_array($option) ? count($option) : $option->count();
     $hidden = $count === 1 && $hideOnOneOption ? 'hidden' : '';
 @endphp
-@if ($label && !$hidden)
-    <x-lavx::form.label for="{{ $name }}" value="{{ $label }}" />
+@if ($label && ! $hidden)
+    <x-lavx::form.label for="{{ $name }}" value="{{ $label }}" display="{{ $labelDisplay }}" />
 @endif
 <select
     @disabled($disabled)
@@ -27,8 +29,8 @@
             <option disabled selected value="{{ $val }}">{{ $text }}</option>
         @endforeach
     @else
-        @if (!$selected)
-            <option disabled selected value="">{{ __('lavx::sys.please').__('lavx::sys.select') }}</option>
+        @if (! $selected)
+            <option disabled selected value="">{{ $noSelectedText }}</option>
         @endif
         @foreach ($option as $val => $text)
             <option
