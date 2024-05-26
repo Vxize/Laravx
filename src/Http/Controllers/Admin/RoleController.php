@@ -155,8 +155,8 @@ class RoleController extends ResourceController
         return $this->updateRecord($request, $role);
     }
 
-    public function destroy(Role $role)
+    public function destroy(Request $request, Role $role)
     {
-        return $this->destroyRecord($role);
+        return $this->destroyRecord($request, $role);
     }
 }

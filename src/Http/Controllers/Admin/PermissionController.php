@@ -153,8 +153,8 @@ class PermissionController extends ResourceController
         return $this->updateRecord($request, $permission);
     }
 
-    public function destroy(Permission $permission)
+    public function destroy(Request $request, Permission $permission)
     {
-        return $this->destroyRecord($permission);
+        return $this->destroyRecord($request, $permission);
     }
 }
