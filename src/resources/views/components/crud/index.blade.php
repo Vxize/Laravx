@@ -2,11 +2,15 @@
     'title' => '',
     'titleWidth' => 'md:w-4/12',
     'width' => 'max-w-full',
+    'alert' => '',
+    'alertColor' => '',
+    'alertEscaped' => false,
     'margin' => '',
     'path' => '',
     'table' => [],
     'columns' => [],
     'rawColumns' => [],
+    'deleteColumns' => [],
     'extraColumns' => [],
     'extraTable' => [],
     'actionColumns' => [],
@@ -52,7 +56,7 @@
             <div class="w-full md:w-5/12 px-8">
                 <x-lavx::form.search
                     action="{{ route($path.'.index', request()->query()) }}"
-                    reset="{{ route($path.'.index') }}"
+                    reset="{{ route($path.'.index', request()->except('search')) }}"
                     searchable="{{ $searchable }}"
                 />
             </div>
@@ -62,7 +66,7 @@
                 @if ($add)
                     <div class="px-1 w-full md:w-1/2">
                         <x-lavx::button
-                            link="{{ route($path.'.create') }}"
+                            link="{{ route($path.'.create', request()->query()) }}"
                             text=""
                             icon="fa-solid:plus"
                         />
@@ -82,6 +86,14 @@
         @endif
     </x-lavx::flex>
 
+    @if ($alert)
+        <x-lavx::alert
+            :color="$alertColor"
+            :text="$alert"
+            :escaped="$alertEscaped"
+        />
+    @endif
+
     @includeIf($filter, $filterData)
 
     <x-lavx::page.session />
@@ -99,6 +111,7 @@
         :table="$table"
         :columns="$columns"
         :rawColumns="$rawColumns"
+        :deleteColumns="$deleteColumns"
         :extraColumns="$extraColumns"
         :extraTable="$extraTable"
         :actionColumns="$actionColumns"
