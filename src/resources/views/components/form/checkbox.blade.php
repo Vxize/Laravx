@@ -5,6 +5,7 @@
     'name',
     'label',
     'textColor' => '',
+    'escaped' => false,
 ])
 
 <x-lavx::form.label for="{{ $id ?? $name }}" class="inline-flex items-center ml-2">
@@ -17,5 +18,11 @@
         :checked=" $checked "
         {{ $attributes }}
     />
-    <span class="ml-2 {{ $textColor }}">{{ $label ?? $slot }}</span>
+    <span class="ml-2 {{ $textColor }}">
+        @if (empty($escaped))
+            {{ $label ?? $slot }}
+        @else
+            {!! $label ?? $slot !!}
+        @endif
+    </span>
 </x-lavx::form.label>

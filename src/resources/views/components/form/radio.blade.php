@@ -14,9 +14,10 @@
     <x-lavx::form.input
         id="{{ $id ?? $name }}"
         type="radio"
-        class="lg:w-8 md:w-6 sm:w-5 lg:h-8 md:h-6 sm:h-5 rounded-full text-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="lg:w-8 md:w-6 sm:w-5 lg:h-8 md:h-6 sm:h-5 text-blue-600 disabled:opacity-50"
         name="{{ $name }}"
         value="{{ $value }}"
+        rounded="rounded-full"
         :required=" $required "
         :disabled=" $disabled "
         :checked=" $checked "

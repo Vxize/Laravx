@@ -92,7 +92,7 @@ class UserController extends ResourceController
                 break;
         }
     }
-    
+
     public function search(Request $request)
     {
         $search = $request->input('search', null);
@@ -107,7 +107,7 @@ class UserController extends ResourceController
                     });
             });
     }
-    
+
     public function extraTable($data)
     {
         $result = [];

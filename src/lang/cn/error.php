@@ -11,5 +11,4 @@ return [
     'User does not have any of the necessary access rights.' => '您沒有訪問的權限',
     'User does not have the right permissions.' => '您沒有所需的權限',
     'User does not have the right roles.' => '您沒有所需的角色',
-    
 ];

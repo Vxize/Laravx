@@ -14,7 +14,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class LavxServiceProvider extends ServiceProvider
 {
-    
+
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/lavx.php', 'lavx');
@@ -83,7 +83,5 @@ class LavxServiceProvider extends ServiceProvider
                 return new LengthAwarePaginator($results, $total, $perPage, $page, $options);
             });
         }
-
-
     }
 }

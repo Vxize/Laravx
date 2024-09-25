@@ -55,7 +55,7 @@ class LogController extends ResourceController
                 break;
         }
     }
-    
+
     public function search(Request $request)
     {
         $search = $request->input('search', null);

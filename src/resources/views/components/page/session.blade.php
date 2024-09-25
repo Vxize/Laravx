@@ -1,6 +1,6 @@
 @props([
     'success' => session('success') ?? '',
-    'error' => session('error') ?? session('validator_errors') ?? '',
+    'error' => session('error') ?? '',
     'escaped' => false,
 ])
 

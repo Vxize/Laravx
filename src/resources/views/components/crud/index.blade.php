@@ -17,7 +17,9 @@
     'actionColumnsText' => [],
     'actionColumnsIcon' => [],
     'add' => true,
+    'addText' => '',
     'download' => true,
+    'downloadText' => '',
     'search' => true,
     'view' => true,
     'edit' => true,
@@ -53,7 +55,7 @@
             <x-lavx::h1 text="{{ $title }}" />
         </div>
         @if ($search)
-            <div class="w-full md:w-5/12 px-8">
+            <div class="px-8 w-full {{ ($add || $download) ? 'md:w-5/12' : 'md:w-2/3' }}">
                 <x-lavx::form.search
                     action="{{ route($path.'.index', request()->query()) }}"
                     reset="{{ route($path.'.index', request()->except('search')) }}"
@@ -62,21 +64,21 @@
             </div>
         @endif
         @if ($add || $download)
-            <x-lavx::flex class="w-full md:w-3/12 px-1">
+            <x-lavx::flex class="px-1 w-full {{ $search ? 'md:w-3/12' : 'md:w-1/2' }}">
                 @if ($add)
-                    <div class="px-1 w-full md:w-1/2">
+                    <div class="px-1 w-full {{$download ? 'md:w-1/2' : '' }}">
                         <x-lavx::button
                             link="{{ route($path.'.create', request()->query()) }}"
-                            text=""
+                            text="{{ $addText }}"
                             icon="fa-solid:plus"
                         />
                     </div>
                 @endif
                 @if ($download)
-                    <div class="px-1 w-full md:w-1/2">
+                    <div class="px-1 w-full {{$add ? 'md:w-1/2' : '' }}">
                         <x-lavx::button
                             :link="$download_link"
-                            text=""
+                            text="{{ $downloadText }}"
                             icon="el:download-alt"
                             color="green"
                         />

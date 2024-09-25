@@ -46,7 +46,9 @@ switch ($color) {
     {{ $align }}
     {{ $color_class }}
 ">
-    @if (empty($escaped))
+    @if (! empty($text) && is_array($text))
+        {!! implode('<br>', $text);  !!}
+    @elseif (empty($escaped))
         {{ $text ?? $slot }}
     @else
         {!! $text ?? $slot !!}

@@ -10,7 +10,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 class UserEventSubscriber
 {
-    
+
     public function createProfile($event)
     {
         Profile::create([

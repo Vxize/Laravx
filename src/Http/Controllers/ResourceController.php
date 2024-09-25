@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class ResourceController extends Controller
 {
-    protected 
+    protected
         $rules = [],  //common rules to valid form input
         $insert_rules = [],  //rules to valid form input when insert record
         $update_rules = [],  //rules to valid form input when update record
@@ -57,7 +57,7 @@ class ResourceController extends Controller
         // show all data for model
         return [];
     }
-    
+
     public function columns($type = 'index')
     {
         $common = [
@@ -100,10 +100,10 @@ class ResourceController extends Controller
     }
 
     public function indexRecord(Request $request, $parm = [])
-    {        
+    {
         $table_data = $parm['table_data'] ?? $this->search($request);
         $download = $request->input('_dl', null);
-        if ($download) {            
+        if ($download) {
             return DownloadDataController::toCSV(
                 $parm['download_columns'] ?? $this->columns('download'),
                 $table_data->get(),
@@ -140,8 +140,8 @@ class ResourceController extends Controller
         ], $parm));
     }
 
-    // process data before store/update record
-    public function beforeSave($data)
+    // process data before store record, might use model event instead
+    public function prepareDataBeforeStore($data, Request $request)
     {
         return $data;
     }
@@ -149,13 +149,13 @@ class ResourceController extends Controller
     // things to do on success store
     public function onStoreSuccess(Request $request, $record)
     {
-        
+
     }
 
     // things to do on failed store
     public function onStoreFail(Request $request)
     {
-        
+
     }
 
     // validate and insert new record to DB, return id of new inserted record
@@ -171,14 +171,15 @@ class ResourceController extends Controller
                 'validator_errors' => $validator->errors()->all()
             ]);
             return 0;
-        }        
-        return $this->model::create($this->beforeSave($data)) ?? null;
+        }
+        return $this->model::create($data) ?? null;
     }
 
     public function storeRecord(Request $request, $data = [])
     {
+        $data = array_merge($request->only($this->columns('store')), $data);
         $record = $this->insertOneRecord(
-            array_merge($request->only($this->columns('store')), $data)
+            $this->prepareDataBeforeStore($data, $request)
         );
         if ($record) {
             $result = 'success';
@@ -225,26 +226,32 @@ class ResourceController extends Controller
             $data,
             array_merge($this->rules, $this->update_rules)
         );
-        if ($validator->fails()) {            
+        if ($validator->fails()) {
             $validator->validated();
             session([
                 'validator_errors' => $validator->errors()->all()
             ]);
             return 0;
         }
-        return $record->update($this->beforeSave($data));
+        return $record->update($data);
+    }
+
+    // process data before update record, might use model event instead
+    public function prepareDataBeforeUpdate($data, Request $request)
+    {
+        return $data;
     }
 
     // things to do on success update
     public function onUpdateSuccess(Request $request, $record, $old_record)
     {
-        
+
     }
 
     // things to do on failed update
     public function onUpdateFail(Request $request, $record)
     {
-        
+
     }
 
     public function columnsUpdated($new_record, $old_record, $columns = [])
@@ -269,9 +276,10 @@ class ResourceController extends Controller
     {
         $old_record = $record->replicate();
         //return rows affected by the update
+        $data = array_merge($request->only($this->columns('update')), $data);
         $rows = $this->updateOneRecord(
             $record,
-            array_merge($request->only($this->columns('update')), $data)
+            $this->prepareDataBeforeUpdate($data, $request)
         );
         if ($rows) {
             $result = 'success';
@@ -291,13 +299,13 @@ class ResourceController extends Controller
     // things to do on json success update
     public function onUpdateJsonSuccess(Request $request, $record, $old_record, $json_column)
     {
-        
+
     }
 
     // things to do on failed update
     public function onUpdateJsonFail(Request $request, $record, $json_column)
     {
-        
+
     }
 
     public function updateJsonColumn(Request $request, $record, $json_column, $data = [])
@@ -324,13 +332,13 @@ class ResourceController extends Controller
     // things to do on success destroy
     public function onDestroySuccess(Request $request, $record)
     {
-        
+
     }
 
     // things to do on failed destroy
     public function onDestroyFail(Request $request, $record)
     {
-        
+
     }
 
     public function destroyRecord(Request $request, $record)
@@ -355,13 +363,13 @@ class ResourceController extends Controller
     // things to do on json success destroy
     public function onDestroyJsonSuccess(Request $request, $record, $json_column)
     {
-        
+
     }
 
     // things to do on json failed destroy
     public function onDestroyJsonFail(Request $request, $record, $json_column)
     {
-        
+
     }
 
     public function destroyJsonColumn(Request $request, $record, $json_column, $json_keys = [])
