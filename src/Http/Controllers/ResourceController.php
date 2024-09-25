@@ -58,6 +58,17 @@ class ResourceController extends Controller
         return [];
     }
 
+    public function rules($type = null)
+    {
+        if ($type === 'insert') {
+            return array_merge($this->rules, $this->insert_rules);
+        }
+        if ($type === 'update') {
+            return array_merge($this->rules, $this->update_rules);
+        }
+        return $this->rules;
+    }
+
     public function columns($type = 'index')
     {
         $common = [
@@ -161,10 +172,7 @@ class ResourceController extends Controller
     // validate and insert new record to DB, return id of new inserted record
     public function insertOneRecord($data = [])
     {
-        $validator = validator(
-            $data,
-            array_merge($this->rules, $this->insert_rules)
-        );
+        $validator = validator($data, $this->rules('insert'));
         if ($validator->fails()) {
             $validator->validated();
             session([
@@ -222,10 +230,7 @@ class ResourceController extends Controller
     // validate and update an old record, return number of affected rows
     public function updateOneRecord($record, $data = [])
     {
-        $validator = validator(
-            $data,
-            array_merge($this->rules, $this->update_rules)
-        );
+        $validator = validator($data, $this->rules('update'));
         if ($validator->fails()) {
             $validator->validated();
             session([
