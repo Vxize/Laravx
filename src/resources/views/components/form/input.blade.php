@@ -6,12 +6,17 @@
     'name' => '',
     'label' => '',
     'labelDisplay' => 'block',
+    'labelEscaped' => false,
     'helper' => '',
     'id' => null,
     'rounded' => 'rounded-lg',
 ])
 @if ($label)
-    <x-lavx::form.label for="{{ $name }}" value="{{ $label }}" display="{{ $labelDisplay }}" />
+    @if ($labelEscaped)
+        <x-lavx::form.label for="{{ $name }}" :escaped="true" value="{!! $label !!}" display="{{ $labelDisplay }}" />
+    @else
+        <x-lavx::form.label for="{{ $name }}" value="{{ $label }}" display="{{ $labelDisplay }}" />
+    @endif
 @endif
 <input 
     id="{{ $id ?? $name }}"
