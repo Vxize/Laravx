@@ -9,6 +9,7 @@
     :alertEscaped=" $alert_escaped ?? false "
     :table=" $table ?? [] "
     :columns=" $columns ?? [] "
+    :columnsHelper=" $columns_helper ?? [] "
     :rawColumns=" $raw_columns ?? [] "
     :deleteColumns=" $delete_columns ?? [] "
     :extraColumns=" $extra_columns ?? [] "

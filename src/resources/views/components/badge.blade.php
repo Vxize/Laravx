@@ -3,7 +3,7 @@
     'padding' => 'py-1 px-2',
     'textSize' => 'text-xs',
     'color' => 'blue',
-    'round' => 'rounded-full',
+    'rounded' => 'rounded-full',
     'text' => null,
 ])
 @php
@@ -33,7 +33,7 @@ switch ($color) {
         $color_class = 'bg-blue-500 text-blue-50';
         break;
 }
-$badge_class = $margin.' '.$padding.' '.$textSize.' '.$color_class.' '.$round;
+$badge_class = $margin.' '.$padding.' '.$textSize.' '.$color_class.' '.$rounded;
 @endphp
 <span {{ $attributes->merge(['class' => $badge_class]) }}>
     {{ $text ?? $slot }}

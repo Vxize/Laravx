@@ -9,6 +9,7 @@
     'path' => '',
     'table' => [],
     'columns' => [],
+    'columnsHelper' => [],
     'rawColumns' => [],
     'deleteColumns' => [],
     'extraColumns' => [],
@@ -112,6 +113,7 @@
     <x-lavx::table
         :table="$table"
         :columns="$columns"
+        :columnsHelper="$columnsHelper"
         :rawColumns="$rawColumns"
         :deleteColumns="$deleteColumns"
         :extraColumns="$extraColumns"

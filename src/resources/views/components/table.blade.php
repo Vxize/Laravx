@@ -2,6 +2,7 @@
     'path' => '',
     'table' => [],
     'columns' => [],
+    'columnsHelper' => [],
     'rawColumns' => [],
     'deleteColumns' => [],
     'extraColumns' => [],
@@ -51,8 +52,17 @@
                     @foreach ($columns as $col)
                         <th class="py-3 px-6">{{ __($col) }}</th>
                     @endforeach
-                    @foreach ($extraColumns as $add_col)
-                        <th class="py-3 px-6">{{ __($add_col) }}</th>
+                    @foreach ($extraColumns as $extra_name => $extra_col)
+                        <th class="py-3 px-6">
+                            @if (! empty($columnsHelper[$extra_name]))
+                                <x-lavx::tooltip
+                                    :titleText=" __($extra_col) "
+                                    :helperText="$columnsHelper[$extra_name]"
+                                />
+                            @else
+                                {{ __($extra_col) }}
+                            @endif
+                        </th>
                     @endforeach
                     @if ($action)
                         <th class="py-3 px-6 text-center md:sticky right-0 bg-lime-100 border-l">{{ $action_column_header ?? '' }}</th>
@@ -76,7 +86,13 @@
                             </td>
                         @endforeach
                         @foreach ($extraColumns as $add_key => $add_col)
-                            <td class="py-2 px-6">{{ $extraTable[$num][$add_key] ?? '' }}</td>
+                            <td class="py-2 px-6">
+                                @if (!empty($rawColumns) && in_array($add_key, $rawColumns))
+                                    {!! $extraTable[$num][$add_key] ?? '' !!}
+                                @else
+                                    {{ $extraTable[$num][$add_key] ?? '' }}
+                                @endif
+                            </td>
                         @endforeach
                         @if ($action)
                             <td class="py-2 px-6 text-center md:sticky right-0 bg-lime-100 hover:bg-gray-200 border-l">

@@ -96,7 +96,7 @@ class ResourceController extends Controller
             case 'action':  // buttons in action column
                 return [];
                 break;
-            case 'extra':
+            case 'extra':  // extra columns for extraTable() data
                 return [];
                 break;
             default:
