@@ -45,6 +45,7 @@ class ResourceController extends Controller
             ]
         ],
         $route_key_name = 'id',  // can be changed by Model->getRouteKeyName()
+        $array_key_name = 'key',  // main key name for update/destroy array columns
         $paginate = null  // number per page
     ;
 
@@ -152,7 +153,7 @@ class ResourceController extends Controller
     }
 
     // process data before store record, might use model event instead
-    public function prepareDataBeforeStore($data, Request $request)
+    public function prepareDataBeforeStore(Request $request, $data)
     {
         return $data;
     }
@@ -187,7 +188,7 @@ class ResourceController extends Controller
     {
         $data = array_merge($request->only($this->columns('store')), $data);
         $record = $this->insertOneRecord(
-            $this->prepareDataBeforeStore($data, $request)
+            $this->prepareDataBeforeStore($request, $data)
         );
         if ($record) {
             $result = 'success';
@@ -242,7 +243,7 @@ class ResourceController extends Controller
     }
 
     // process data before update record, might use model event instead
-    public function prepareDataBeforeUpdate($data, Request $request)
+    public function prepareDataBeforeUpdate(Request $request, $data)
     {
         return $data;
     }
@@ -280,11 +281,11 @@ class ResourceController extends Controller
     public function updateRecord(Request $request, $record, $data = [])
     {
         $old_record = $record->replicate();
-        //return rows affected by the update
         $data = array_merge($request->only($this->columns('update')), $data);
+        //return rows affected by the update
         $rows = $this->updateOneRecord(
             $record,
-            $this->prepareDataBeforeUpdate($data, $request)
+            $this->prepareDataBeforeUpdate($request, $data)
         );
         if ($rows) {
             $result = 'success';
@@ -307,7 +308,7 @@ class ResourceController extends Controller
 
     }
 
-    // things to do on failed update
+    // things to do on json failed update
     public function onUpdateJsonFail(Request $request, $record, $json_column)
     {
 
@@ -316,9 +317,9 @@ class ResourceController extends Controller
     public function updateJsonColumn(Request $request, $record, $json_column, $data = [])
     {
         $old_record = $record->replicate();
-        $row = $this->updateOneRecord($record, [
-            $json_column => array_merge($record[$json_column] ?? [], $data)
-        ]);
+        $json_data = array_merge($record[$json_column] ?? [], $data);
+        ksort($json_data);
+        $row = $this->updateOneRecord($record, [$json_column => $json_data]);
         if ($row) {
             $result = 'success';
             $message = $request->success_message ?? $this->messages['update']['success'];
@@ -333,7 +334,50 @@ class ResourceController extends Controller
             $request->_redirect_data ?? $record ?? null
         )->with($result, __($message));
     }
- 
+
+    // things to do on array success update
+    public function onUpdateArraySuccess(Request $request, $record, $old_record, $array_column)
+    {
+
+    }
+
+    // things to do on array failed update
+    public function onUpdateArrayFail(Request $request, $record, $array_column)
+    {
+
+    }
+
+    public function updateArrayColumn(Request $request, $record, $array_column, $data = [])
+    {
+        $old_record = $record->replicate();
+        $row = 0;
+        $key = $data[$this->array_key_name] ?? null;
+        if ($key) {
+            $array_column_data = $record[$array_column] ?? [];
+            $array_column_data[$key] = array_merge(
+                $array_column_data[$key] ?? [],
+                [$data['name'] => $data['value']]
+            );
+            ksort($array_column_data[$key]);
+            $row = $this->updateOneRecord($record, [
+                $array_column => $array_column_data ?: null
+            ]);
+        }
+        if ($row) {
+            $result = 'success';
+            $message = $request->success_message ?? $this->messages['update']['success'];
+            $this->onUpdateArraySuccess($request, $record, $old_record, $array_column);
+        } else {
+            $result = 'error';
+            $message = $request->error_message ?? $this->messages['update']['error'];
+            $this->onUpdateArrayFail($request, $record, $array_column);
+        }
+        return to_route(
+            $request->_redirect ?? $this->redirects['update'] ?? $this->path.'.index',
+            $request->_redirect_data ?? $record ?? null
+        )->with($result, __($message));
+    }
+
     // things to do on success destroy
     public function onDestroySuccess(Request $request, $record)
     {
@@ -382,7 +426,7 @@ class ResourceController extends Controller
         $deleted_record = $record->replicate();
         $json_column_data = $record[$json_column] ?? [];
         foreach ($json_keys as $key) {
-            if ($key && isset($json_column_data[$key])) {
+            if (isset($json_column_data[$key])) {
                 unset($json_column_data[$key]);
             }
         }
@@ -397,6 +441,48 @@ class ResourceController extends Controller
             $result = 'error';
             $message = $this->messages['destroy']['error'];
             $this->onDestroyJsonFail($request, $deleted_record, $json_column);
+        }
+        return to_route(
+            $request->_redirect ?? $this->redirects['destroy'] ?? $this->path.'.index',
+            $request->_redirect_data ?? $deleted_record ?? null
+        )->with($result, __($message));
+    }
+
+    // things to do on array success destroy
+    public function onDestroyArraySuccess(Request $request, $record, $array_column)
+    {
+
+    }
+
+    // things to do on array failed destroy
+    public function onDestroyArrayFail(Request $request, $record, $array_column)
+    {
+
+    }
+
+    public function destroyArrayColumn(Request $request, $record, $array_column, $key, $array_keys = [])
+    {
+        $deleted_record = $record->replicate();
+        $array_column_data = $record[$array_column] ?? [];
+        foreach ($array_keys as $akey) {
+            if (isset($array_column_data[$key][$akey])) {
+                unset($array_column_data[$key][$akey]);
+            }
+        }
+        if (empty($array_column_data[$key])) {
+            unset($array_column_data[$key]);
+        }
+        $row = $this->updateOneRecord($record, [
+            $array_column => $array_column_data ?: null
+        ]);
+        if ($row) {
+            $result = 'success';
+            $message = $this->messages['destroy']['success'];
+            $this->onDestroyArraySuccess($request, $deleted_record, $array_column);
+        } else {
+            $result = 'error';
+            $message = $this->messages['destroy']['error'];
+            $this->onDestroyArrayFail($request, $deleted_record, $array_column);
         }
         return to_route(
             $request->_redirect ?? $this->redirects['destroy'] ?? $this->path.'.index',

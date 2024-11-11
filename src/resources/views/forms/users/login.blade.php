@@ -1,11 +1,11 @@
 <!-- Email Address -->
 <div>
-    <x-lavx::form.email class="block mt-1 w-full" required autofocus />
+    <x-lavx::form.email required autofocus />
 </div>
 
 <!-- Password -->
 <div class="mt-6">
-    <x-lavx::form.input :label="__('lavx::user.password')" class="block mt-1 w-full"
+    <x-lavx::form.input :label="__('lavx::user.password')"
         type="password" name="password"
         required autocomplete="current-password" />
 </div>

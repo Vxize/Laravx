@@ -5,5 +5,5 @@
             label="{{ __('role.'.$role) }} ({{ $role }})"
             checked="{{ in_array($role, $user_roles) }}"
         />
-    </div>    
+    </div>
 @endforeach

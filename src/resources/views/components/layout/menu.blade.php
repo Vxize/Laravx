@@ -16,7 +16,7 @@
 @endphp
 
 @if ($submit)
-    <button type="submit"    
+    <button type="submit"
 @else
     <a href="{{ $link }}"
 @endif
@@ -28,7 +28,7 @@
         : 'hover:bg-gray-200 hover:text-gray-900 dark-mode:bg-transparent'
     }}
 ">
-    <x-lavx::icon icon="{{ $icon }}" class="mx-2" />
+    <x-lavx::icon icon="{{ $icon }}" class="w-10" />
     <span>{{ $text ?? $slot }}</span>
 
 @if ($submit)

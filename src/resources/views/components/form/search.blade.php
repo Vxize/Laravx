@@ -5,10 +5,11 @@
     'showError' => false,
 ])
 @php
-    $query = Arr::except(request()->query(), ['search', 'page']);
+    $query = request()->except(['search', 'page']);
+    $link = route($action, $query);
 @endphp
 <x-lavx::form
-    action="{{ $action }}"
+    :action=" $link "
     showError="{{ $showError }}"
     type="get"
 >
@@ -27,7 +28,7 @@
                 value="{{ request()->input('search') ?? '' }}"
                 required
             />
-            <a href="{{ $reset }}" class="absolute right-0 top-0 mt-5 mr-14 hover:opacity-50" >
+            <a href="{{ $link }}" class="absolute right-0 top-0 mt-5 mr-14 hover:opacity-50" >
                 <span class="text-3xl text-red-600"><x-lavx::icon icon="fa6-solid:xmark" /></span>
             </a>
             <button type="submit" class="absolute right-0 top-0 mt-5 mr-4 hover:opacity-50">

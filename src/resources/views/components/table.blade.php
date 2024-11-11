@@ -156,7 +156,7 @@
                             </td>
                         @endif
                         @if ($delete)
-                            <td class="hide">
+                            <td>
                                 <x-lavx::modal
                                     id="delete_{{Arr::get($row, $routeKeyName)}}"
                                     maxWidth="max-w-sm"

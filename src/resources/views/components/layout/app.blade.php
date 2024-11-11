@@ -12,13 +12,12 @@
     </head>
     <body>
         <div class="text-gray-700 antialiased">
-            <div class="min-h-screen flex bg-gray-100">
-                <input type="checkbox" id="menu-toggle" class="relative sr-only peer" checked>
+            <div class="min-h-screen flex bg-gray-100" x-data="sidenavOpen()">
+                <input type="checkbox" id="menu-toggle" class="relative sr-only peer"  x-model="isOpen" @change="updateSidenavOpen">
                 <label
                     for="menu-toggle"
                     class="fixed top-0 z-40 inline-block p-4 bg-blue-600
                     left-48 md:left-0
-                    transition-all duration-500
                     rotate-180 md:rotate-0
                     peer-checked:rotate-0 peer-checked:md:rotate-180
                     peer-checked:left-0 peer-checked:md:left-48"
@@ -28,7 +27,6 @@
                 </label>
                 <div class="fixed top-0 left-0 z-40 h-full shadow-xl overflow-y-auto
                     border-r border-gray-300
-                    transition-all duration-500 transform
                     translate-x-0 md:-translate-x-full
                     peer-checked:md:translate-x-0 peer-checked:-translate-x-full
                     w-48 bg-gray-50 lg:text-lg md:text-base text-sm
@@ -46,5 +44,15 @@
                 </main>
             </div>
         </div>
+        <script>
+            function sidenavOpen() {
+                return {
+                    isOpen: localStorage.getItem('sidenavOpen') !== 'false',
+                    updateSidenavOpen() {
+                        localStorage.setItem('sidenavOpen', this.isOpen);
+                    }
+                };
+            }
+        </script>
     </body>
 </html>

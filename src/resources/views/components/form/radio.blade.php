@@ -8,13 +8,17 @@
     'name',
     'label',
     'textColor' => '',
+    'width' => 'lg:w-8 md:w-6 sm:w-5',
+    'height' => 'lg:h-8 md:h-6 sm:h-5',
+    'color' => 'text-blue-600',
+    'disable' => 'disabled:opacity-50',
 ])
 
-<x-lavx::form.label class="inline-flex items-center ml-2">
+<x-lavx::form.label display="inline-flex items-center">
     <x-lavx::form.input
         id="{{ $id ?? $name }}"
         type="radio"
-        class="lg:w-8 md:w-6 sm:w-5 lg:h-8 md:h-6 sm:h-5 text-blue-600 disabled:opacity-50"
+        class="{{ $width }} {{ $height }} {{ $color }} {{ $disable }} "
         name="{{ $name }}"
         value="{{ $value }}"
         rounded="rounded-full"

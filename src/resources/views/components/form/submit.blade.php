@@ -10,6 +10,7 @@
     'text' => __('lavx::sys.save'),
     'iconPrefix' => 'iconify-inline inline-block',
     'icon' => 'fa-solid:save',
+    'iconRight' => '',
     'disabled' => false,
 ])
 @php
@@ -56,4 +57,7 @@ switch ($color) {
         <x-lavx::icon prefix="{{ $iconPrefix }}" icon="{{ $icon }}" />
     @endif
     {{ $text ?? $slot }}
+    @if ($iconRight)
+        <x-lavx::icon prefix="{{ $iconPrefix }}" icon="{{ $iconRight }}" />
+    @endif
 </button>

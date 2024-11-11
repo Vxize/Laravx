@@ -1,22 +1,24 @@
 @props([
     'route' => '',
     'showError' => false,
+    'filter' => [],
 ])
 @php
-    $query = request()->query();
-    $search = empty($query['search']) ? null : ['search' => $query['search']];
-    $paginate = empty($query['paginate']) ? null : ['paginate' => $query['paginate']];
+    if (! in_array('page', $filter)) {
+        $filter[] = 'page';
+    }
+    $query = request()->except($filter);
+    $link = route($route, $query);
 @endphp
 <x-lavx::form
-    action="{{ route($route, request()->query()) }}"
+    :action=" $link "
     showError="{{ $showError }}"
     type="get"
 >
-@if (! empty($query['search']))
-    <input type="hidden" name="search" value="{{ $query['search'] }}" >
-@endif
-@if (! empty($query['paginate']))
-    <input type="hidden" name="paginate" value="{{ $query['paginate'] }}" >
+@if (! empty($query))
+    @foreach ($query as $name => $value)
+        <input type="hidden" name="{{ $name }}" value="{{ $value }}" >
+    @endforeach
 @endif
     {{ $slot }}
     <x-slot:submit>
@@ -34,7 +36,7 @@
         <x-lavx::button
             display="inline-block"
             color="red"
-            link="{{ route($route, $search) }}"
+            :link=" $link "
             icon="fa6-solid:filter-circle-xmark"
             text="{{ __('lavx::sys.reset') }}"
             textSize="lg:text-lg md:text-md text-base"

@@ -13,5 +13,5 @@
                 || in_array($permission, $user_direct_permissions)
             }}"
         />
-    </div>    
+    </div>
 @endforeach

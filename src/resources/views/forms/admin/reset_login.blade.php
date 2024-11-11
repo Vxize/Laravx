@@ -1,6 +1,5 @@
 <div>
     <x-lavx::form.email
-        class="block mt-1 w-full" 
         value="{{ old('email') ?? $record->email ?? '' }}"
         required
         autofocus

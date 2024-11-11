@@ -4,7 +4,8 @@
             <x-lavx::form.input
                 :label="__('lavx::log.log_name')"
                 labelDisplay="inline-block"
-                class="inline-block mt-1 w-40"
+                display="inline-block"
+                width="w-40"
                 type="text"
                 name="log_name"
                 value="{{ request()->input('log_name') ?? '' }}"
@@ -12,7 +13,8 @@
             <x-lavx::form.input
                 :label="__('lavx::user.user')"
                 labelDisplay="inline-block"
-                class="inline-block mt-1 w-24"
+                display="inline-block"
+                width="w-24"
                 type="text"
                 name="user_id"
                 value="{{ request()->input('user_id') ?? '' }}"

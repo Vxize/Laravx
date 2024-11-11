@@ -18,7 +18,9 @@
 @endif
     <span class="p-1">{{ __('pagination.each_page') }}</span>
     <x-lavx::form.input
-        class="inline-block w-12 h-8 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        display="inline-block"
+        width="w-12"
+        class="h-8 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
         type="number"
         name="paginate"
         value="{{ $paginate ?? '' }}"

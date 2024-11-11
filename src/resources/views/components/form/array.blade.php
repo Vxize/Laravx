@@ -2,6 +2,7 @@
     'route' => '',
     'showError' => false,
     'hiddenInputs' => [],
+    'keyName' => 'key',
 ])
 @foreach ($hiddenInputs as $name => $value)
     <input type="hidden" name="{{$name}}" value="{{$value}}" />
@@ -12,10 +13,19 @@
     type="update"
 >
     <x-lavx::form.input
+        :label="__('lavx::sys.key')"
+        labelDisplay="inline-block"
+        display="inline-block"
+        width="w-32"
+        type="text"
+        name="{{ $keyName }}"
+        required
+    />
+    <x-lavx::form.input
         :label="__('lavx::sys.name')"
         labelDisplay="inline-block"
         display="inline-block"
-        width="w-52"
+        width="w-40"
         type="text"
         name="name"
         required
@@ -24,7 +34,7 @@
         :label="__('lavx::sys.value')"
         labelDisplay="inline-block"
         display="inline-block"
-        width="w-80"
+        width="w-72"
         type="text"
         name="value"
         required

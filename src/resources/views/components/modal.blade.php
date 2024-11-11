@@ -27,7 +27,7 @@
     'openButtonMargin' => 'mx-auto my-8',
     'openButtonTextSize' => 'lg:text-2xl md:text-xl text-lg',
 ])
-<div 
+<div
     @if ($xdata)
         x-data="{ {{$id}}: false }"
     @endif
